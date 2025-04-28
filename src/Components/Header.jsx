@@ -9,15 +9,15 @@ export default function MainHeader(props) {
   function LibraryNavigation() {
     return (
       <>
-        <Nav.Item>
+        <Nav.Item href="/#">
           <MaterialIcon icon="home" invert />
           Home
         </Nav.Item>
-        <Nav.Item>
+        <Nav.Item href="/#playlists">
           <MaterialIcon icon="video_library" invert />
           Playlists
         </Nav.Item>
-        <Nav.Item>
+        <Nav.Item href="/#collections">
           <MaterialIcon icon="photo_library" invert />
           Collections
         </Nav.Item>
