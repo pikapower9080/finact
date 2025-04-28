@@ -1,0 +1,20 @@
+#root {
+  height: 100vh;
+}
+
+body {
+  overflow: hidden;
+}
+
+i.material-icons {
+  margin-right: 5px;
+  color: inherit !important;
+}
+i.material-icons.no-space {
+  margin-right: 0;
+}
+
+.szh-menu__item--anchor {
+  text-decoration: none !important;
+  color: unset !important;
+}
