@@ -18,3 +18,16 @@ i.material-icons.no-space {
   text-decoration: none !important;
   color: unset !important;
 }
+
+.rs-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.now-playing {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}

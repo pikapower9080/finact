@@ -8,6 +8,7 @@ import { HashRouter, Route, Routes } from "react-router";
 import Home from "./Components/Home";
 import Playlists from "./Components/Playlists";
 import Collections from "./Components/Collections";
+import NowPlaying from "./Components/NowPlaying";
 
 const storage = getStorage();
 
@@ -33,13 +34,16 @@ function App() {
           {!user ? (
             <SignIn setUser={setUser} />
           ) : (
-            <HashRouter>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/playlists" element={<Playlists />} />
-                <Route path="/collections" element={<Collections />} />
-              </Routes>
-            </HashRouter>
+            <>
+              <HashRouter>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/playlists" element={<Playlists />} />
+                  <Route path="/collections" element={<Collections />} />
+                </Routes>
+              </HashRouter>
+              <NowPlaying />
+            </>
           )}
         </Content>
       </Container>

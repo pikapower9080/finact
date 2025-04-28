@@ -9,9 +9,7 @@ import "@szhsin/react-menu/dist/transitions/zoom.css";
 import { CustomProvider } from "rsuite";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <CustomProvider theme="dark">
-      <App />
-    </CustomProvider>
-  </StrictMode>
+  <CustomProvider theme="dark">
+    <App />
+  </CustomProvider>
 );
