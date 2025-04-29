@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Col, Grid, Heading, Image, Placeholder, Row } from "rsuite";
+import { useContext, useEffect, useState } from "react";
+import { Col, Grid, Heading, Image, Row } from "rsuite";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
-import { getUser } from "../App";
+import { getUser, LoadingContext } from "../App";
 import { getStorage } from "../storage";
 import ItemTile from "../Components/ItemTile";
 
@@ -9,8 +9,10 @@ const storage = getStorage();
 
 export default function Collections() {
   const [collections, setCollections] = useState(null);
+  const { loading, setLoading } = useContext(LoadingContext);
 
   useEffect(() => {
+    setLoading(true);
     getLibrary("boxsets").then((collectionsLibrary) => {
       const query = {
         StartIndex: 0,
@@ -27,15 +29,14 @@ export default function Collections() {
 
       jellyfinRequest(`/Users/${getUser().Id}/Items?${params.toString()}`).then((collections) => {
         setCollections(collections);
+        setLoading(false);
       });
     });
   }, []);
 
   return (
     <>
-      {!collections ? (
-        <Placeholder.Graph active width={100} height={100} />
-      ) : (
+      {collections && (
         <>
           <Heading level={3}>Collections</Heading>
           <Grid fluid>

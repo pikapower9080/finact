@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Col, Grid, Heading, Image, Placeholder, Row } from "rsuite";
+import { useContext, useEffect, useState } from "react";
+import { Col, Grid, Heading, Image, Row } from "rsuite";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
-import { getUser } from "../App";
+import { getUser, LoadingContext } from "../App";
 import { getStorage } from "../storage";
 import ItemTile from "../Components/ItemTile";
 
@@ -9,20 +9,21 @@ const storage = getStorage();
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState(null);
+  const { loading, setLoading } = useContext(LoadingContext);
 
   useEffect(() => {
+    setLoading(true);
     getLibrary("playlists").then((playlistsLibrary) => {
       jellyfinRequest(`/Users/${getUser().Id}/Items?StartIndex=0&Limit=100&Fields=PrimaryImageAspectRatio,SortName,Path,ChildCount&ImageTypeLimit=1&ParentId=${playlistsLibrary.Id}&SortBy=IsFolder,SortName&SortOrder=Ascending`).then((playlists) => {
         setPlaylists(playlists);
+        setLoading(false);
       });
     });
   }, []);
 
   return (
     <>
-      {!playlists ? (
-        <Placeholder.Graph active width={100} height={100} />
-      ) : (
+      {playlists && (
         <>
           <Heading level={3}>Playlists</Heading>
           <Grid fluid>

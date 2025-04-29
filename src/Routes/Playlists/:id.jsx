@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
 import { Heading, Button, Placeholder, List, HStack, Avatar, Text, VStack, ButtonGroup } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
-import { getUser } from "../../App";
+import { getUser, LoadingContext } from "../../App";
 import { formatSeconds, getAlbumArt } from "../../Util/Formatting";
 import Icon from "../../Components/Icon";
 import { PlaybackContext } from "../../App";
@@ -50,13 +50,16 @@ export default function Playlist() {
   const { id } = useParams();
 
   const [data, setData] = useState(null);
+  const { loading, setLoading } = useContext(LoadingContext);
 
   useEffect(() => {
+    setLoading(true);
     const fetchPlaylistData = async () => {
       const data = await jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`);
       console.log(data);
       const items = await jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete`);
       setData({ data, items });
+      setLoading(false);
     };
 
     fetchPlaylistData();
@@ -82,7 +85,7 @@ export default function Playlist() {
           </List>
         </>
       ) : (
-        "Loading..."
+        ""
       )}
     </>
   );
