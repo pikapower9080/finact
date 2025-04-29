@@ -55,10 +55,9 @@ export default function Playlist() {
   useEffect(() => {
     setLoading(true);
     const fetchPlaylistData = async () => {
-      const data = await jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`);
-      console.log(data);
-      const items = await jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete`);
-      setData({ data, items });
+      const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete`)]);
+      console.log(responses);
+      setData({ data: responses[0], items: responses[1] });
       setLoading(false);
     };
 
