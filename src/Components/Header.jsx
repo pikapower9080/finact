@@ -1,6 +1,6 @@
 import { Header, Navbar, Nav, Avatar, Image } from "rsuite";
 import { getStorage } from "../storage";
-import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
+import { Menu, MenuItem } from "@szhsin/react-menu";
 import MaterialIcon from "material-icons-react";
 
 const storage = getStorage();

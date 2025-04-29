@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
-import { Heading, Button, Placeholder, List, HStack, Avatar, Text, VStack, ButtonGroup, Stat, Panel } from "rsuite";
+import { Heading, Button, List, HStack, Avatar, Text, VStack, ButtonGroup, Stat } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
 import { getUser, LoadingContext } from "../../App";
 import { formatSeconds, formatTimestamp, getAlbumArt } from "../../Util/Formatting";

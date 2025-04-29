@@ -1,4 +1,4 @@
-import { Card, Form, InputGroup, Stack, Panel, useToaster, Notification } from "rsuite";
+import { Form, InputGroup, Stack, Panel, useToaster, Notification } from "rsuite";
 import { getStorage } from "../storage";
 import { jellyfinRequest } from "../Util/Network";
 import { useState } from "react";

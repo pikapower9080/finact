@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Col, Grid, Heading, Image, Row } from "rsuite";
+import { Grid, Heading, Row } from "rsuite";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { getUser, LoadingContext } from "../App";
 import { getStorage } from "../storage";
