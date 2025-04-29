@@ -63,3 +63,7 @@ i.material-icons.no-space {
 .rs-btn.square {
   padding-inline: 8px;
 }
+
+.spacer {
+  display: block;
+}
