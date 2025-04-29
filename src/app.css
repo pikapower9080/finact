@@ -24,10 +24,42 @@ i.material-icons.no-space {
   overflow-x: hidden;
   width: 100%;
   height: 100%;
+  padding: 10px;
+  padding-inline: 15px;
 }
 
 .now-playing {
   position: fixed;
   bottom: 0;
   width: 100%;
+  padding: 5px 10px;
+}
+
+.now-playing-slider {
+  margin-top: -9px;
+  margin-bottom: 5px;
+  width: 100vw;
+  position: absolute;
+  left: 0;
+  border-radius: 0;
+  & .rs-slider-progress-bar,
+  &.rs-slider-bar {
+    border-radius: 0;
+  }
+}
+
+.is-bold {
+  font-weight: bold;
+}
+
+.no-select {
+  user-select: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.rs-btn.square {
+  padding-inline: 8px;
 }

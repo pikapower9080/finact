@@ -3,52 +3,9 @@ import { Col, Grid, Heading, Image, Placeholder, Row } from "rsuite";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { getUser } from "../App";
 import { getStorage } from "../storage";
+import ItemTile from "../Components/ItemTile";
 
 const storage = getStorage();
-
-const getColSize = () => {
-  return {
-    xs: 12,
-    sm: 8,
-    md: 6,
-    lg: 4,
-    xl: 3
-  };
-};
-
-const squareStyle = {
-  position: "relative",
-  width: "100%",
-  paddingTop: "100%", // 1:1 aspect ratio
-  marginBottom: "16px",
-  borderRadius: "8px",
-  overflow: "hidden"
-};
-
-const contentStyle = {
-  position: "absolute",
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: "bold"
-};
-
-function Playlist(props) {
-  return (
-    <Col key={props.playlist.Id} {...getColSize()}>
-      <div style={squareStyle}>
-        <div style={contentStyle}>
-          <Image draggable={false} src={`${storage.get("serverURL")}/Items/${props.playlist.Id}/Images/Primary`}></Image>
-        </div>
-      </div>
-      <p>{props.playlist.Name}</p>
-    </Col>
-  );
-}
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState(null);
@@ -71,7 +28,7 @@ export default function Playlists() {
           <Grid fluid>
             <Row gutter={16}>
               {playlists.Items.map((item, index) => (
-                <Playlist playlist={item} />
+                <ItemTile item={item} key={item.Id} tileProps={{ onClick: () => (window.location.href = `/#playlists/${item.Id}`), className: "pointer" }} />
               ))}
             </Row>
           </Grid>

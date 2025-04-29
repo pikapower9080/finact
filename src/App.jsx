@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { Container, Content } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import { SignIn } from "./Components/SignIn";
 import { getStorage } from "./storage";
 import MainHeader from "./Components/Header";
 import { HashRouter, Route, Routes } from "react-router";
-import Home from "./Components/Home";
-import Playlists from "./Components/Playlists";
-import Collections from "./Components/Collections";
+import Home from "./Routes/Home";
+import Playlists from "./Routes/Playlists";
+import Collections from "./Routes/Collections";
 import NowPlaying from "./Components/NowPlaying";
+import Collection from "./Routes/Collections/:id";
+import NotFound from "./Routes/NotFound";
+import Playlist from "./Routes/Playlists/:id";
 
 const storage = getStorage();
 
@@ -23,30 +26,38 @@ export function getUser() {
   }
 }
 
+export const PlaybackContext = createContext();
+
 function App() {
   const [user, setUser] = useState(getUser);
+  const [playbackState, setPlaybackState] = useState(null);
 
   return (
     <>
-      <Container style={{ height: "100%" }}>
-        <MainHeader user={user} />
-        <Content>
-          {!user ? (
-            <SignIn setUser={setUser} />
-          ) : (
-            <>
-              <HashRouter>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/playlists" element={<Playlists />} />
-                  <Route path="/collections" element={<Collections />} />
-                </Routes>
-              </HashRouter>
-              <NowPlaying />
-            </>
-          )}
-        </Content>
-      </Container>
+      <PlaybackContext.Provider value={{ playbackState, setPlaybackState }}>
+        <Container style={{ height: "100%" }}>
+          <MainHeader user={user} />
+          <Content>
+            {!user ? (
+              <SignIn setUser={setUser} />
+            ) : (
+              <>
+                <HashRouter>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/playlists" element={<Playlists />} />
+                    <Route path="/playlists/:id" element={<Playlist />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/collections/:id" element={<Collection />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </HashRouter>
+              </>
+            )}
+          </Content>
+          {playbackState && <NowPlaying state={playbackState} />}
+        </Container>
+      </PlaybackContext.Provider>
     </>
   );
 }
