@@ -2,6 +2,7 @@ import { Header, Navbar, Nav, Avatar, Image } from "rsuite";
 import { getStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
+import { getUser } from "../App";
 
 const storage = getStorage();
 
@@ -48,9 +49,15 @@ export default function MainHeader(props) {
                 theming="dark"
               >
                 <MenuItem href={`${storage.get("serverURL")}/web/#/mypreferencesmenu.html`} target="_blank">
-                  <Icon icon="open_in_new" />
+                  <Icon icon="account_circle" />
                   User Settings
                 </MenuItem>
+                {getUser().Policy.IsAdministrator && (
+                  <MenuItem href={`${storage.get("serverURL")}/web/#/dashboard`} target="_blank">
+                    <Icon icon="dashboard" />
+                    Dashboard
+                  </MenuItem>
+                )}
                 <MenuItem
                   onClick={() => {
                     storage.clearAll();
