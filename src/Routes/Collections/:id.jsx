@@ -30,7 +30,15 @@ export default function Collection() {
           <Grid fluid>
             <Row gutter={16}>
               {items.Items.map((item, index) => (
-                <ItemTile item={item} />
+                <ItemTile
+                  item={item}
+                  tileProps={{
+                    onClick: () => {
+                      location.href = "/#albums/" + item.Id;
+                    },
+                    className: "pointer"
+                  }}
+                />
               ))}
             </Row>
           </Grid>

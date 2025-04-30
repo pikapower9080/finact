@@ -1,7 +1,7 @@
 import { Header, Navbar, Nav, Avatar, Image } from "rsuite";
 import { getStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
-import MaterialIcon from "material-icons-react";
+import Icon from "./Icon";
 
 const storage = getStorage();
 
@@ -10,15 +10,15 @@ export default function MainHeader(props) {
     return (
       <>
         <Nav.Item href="/#">
-          <MaterialIcon icon="home" invert />
+          <Icon icon="home" />
           Home
         </Nav.Item>
         <Nav.Item href="/#playlists">
-          <MaterialIcon icon="video_library" invert />
+          <Icon icon="video_library" />
           Playlists
         </Nav.Item>
         <Nav.Item href="/#collections">
-          <MaterialIcon icon="photo_library" invert />
+          <Icon icon="photo_library" />
           Collections
         </Nav.Item>
       </>
@@ -34,29 +34,34 @@ export default function MainHeader(props) {
         <Nav>{props.user ? <LibraryNavigation /> : ""}</Nav>
         <Nav pullRight>
           {props.user ? (
-            <Menu
-              menuButton={
-                <Nav.Item>
-                  <Avatar circle size="sm" src={`${storage.get("serverURL")}/Users/${props.user.Id}/Images/Primary`} />
-                </Nav.Item>
-              }
-              transition
-              theming="dark"
-            >
-              <MenuItem href={`${storage.get("serverURL")}/web/#/mypreferencesmenu.html`} target="_blank">
-                <MaterialIcon icon="open_in_new" invert />
-                User Settings
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  storage.clearAll();
-                  window.location.reload();
-                }}
+            <>
+              <Nav.Item as="a" href="/#search">
+                <Icon icon="search" noSpace />
+              </Nav.Item>
+              <Menu
+                menuButton={
+                  <Nav.Item title="Profile">
+                    <Avatar circle size="sm" src={`${storage.get("serverURL")}/Users/${props.user.Id}/Images/Primary`} />
+                  </Nav.Item>
+                }
+                transition
+                theming="dark"
               >
-                <MaterialIcon icon="logout" invert />
-                Sign out
-              </MenuItem>
-            </Menu>
+                <MenuItem href={`${storage.get("serverURL")}/web/#/mypreferencesmenu.html`} target="_blank">
+                  <Icon icon="open_in_new" />
+                  User Settings
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    storage.clearAll();
+                    window.location.reload();
+                  }}
+                >
+                  <Icon icon="logout" />
+                  Sign out
+                </MenuItem>
+              </Menu>
+            </>
           ) : (
             ""
           )}

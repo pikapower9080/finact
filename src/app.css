@@ -67,3 +67,16 @@ i.material-icons.no-space {
 .spacer {
   display: block;
 }
+
+.item-stat {
+  padding: 16px;
+  padding-inline: 10px;
+}
+
+.item-stat:first {
+  padding-left: none;
+}
+
+.md-16 {
+  font-size: 16px !important;
+}

@@ -1,24 +1,20 @@
 {
-	"cSpell.words": [
-		"Blurhash",
-		"finact",
-		"jellyfin"
-	],
-	"editor.formatOnSave": true,
-	"files.autoSave": "onFocusChange",
-	"[javascript]": {
-	  "editor.defaultFormatter": "esbenp.prettier-vscode",
-	  "editor.tabSize": 2,
-	  "editor.formatOnSave": true
-	},
-	"[javascriptreact]": {
-	  "editor.defaultFormatter": "esbenp.prettier-vscode",
-	  "editor.tabSize": 2,
-	  "editor.formatOnSave": true
-	},
-	"[css]": {
-	  "editor.defaultFormatter": "esbenp.prettier-vscode",
-	  "editor.tabSize": 2,
-	  "editor.formatOnSave": true
-	}
+  "cSpell.words": ["Blurhash", "finact", "jellyfin", "rsuite", "szhsin"],
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  }
 }

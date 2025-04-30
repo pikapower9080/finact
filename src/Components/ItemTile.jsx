@@ -1,6 +1,7 @@
 import { Col, Image, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { Blurhash } from "react-blurhash";
+import { getAlbumArt } from "../Util/Formatting";
 
 const storage = getStorage();
 
@@ -17,7 +18,7 @@ const squareStyle = {
   width: "100%",
   paddingTop: "100%", // 1:1 aspect ratio
   marginBottom: "3px",
-  borderRadius: "8px",
+  borderRadius: "6px",
   overflow: "hidden"
 };
 
@@ -38,14 +39,14 @@ export default function ItemTile(props) {
     <Col key={props.item.Id} {...getColSize()} style={{ marginBottom: 5 }} {...props.tileProps}>
       <div style={squareStyle}>
         <div style={contentStyle}>
-          <Blurhash style={{ zIndex: 0 }} hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />
+          <Blurhash hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />
           <Image
-            style={{ visibility: "hidden", zIndex: 1, position: "absolute", backgroundColor: "var(--rs-body)" }}
+            style={{ visibility: "hidden", position: "absolute", backgroundColor: "var(--rs-body)" }}
             onLoad={(e) => {
               e.target.style.visibility = "visible";
             }}
             draggable={false}
-            src={`${storage.get("serverURL")}/Items/${props.item.Id}/Images/Primary`}
+            src={props.item.Type == "Audio" ? getAlbumArt(props.item) : `${storage.get("serverURL")}/Items/${props.item.Id}/Images/Primary`}
           />
         </div>
       </div>

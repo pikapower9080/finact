@@ -2,7 +2,7 @@ import { Form, InputGroup, Stack, Panel, useToaster, Notification } from "rsuite
 import { getStorage } from "../storage";
 import { jellyfinRequest } from "../Util/Network";
 import { useState } from "react";
-import MaterialIcon from "material-icons-react";
+import Icon from "./Icon";
 
 const storage = getStorage();
 
@@ -69,7 +69,7 @@ export function SignIn(props) {
             <InputGroup style={styles}>
               <Form.Control name="serverURL" placeholder="https://demo.jellyfin.org" />
               <InputGroup.Button loading={loading} type="submit">
-                <MaterialIcon icon="arrow_forward" size="tiny" />
+                <Icon icon="arrow_forward" size="tiny" />
               </InputGroup.Button>
             </InputGroup>
           </Form.Group>
@@ -118,7 +118,7 @@ export function SignIn(props) {
             <InputGroup>
               <Form.Control name="password" type="password" placeholder="Password" />
               <InputGroup.Button loading={loading} type="submit">
-                <MaterialIcon icon="arrow_forward" size="tiny" />
+                <Icon icon="arrow_forward" size="tiny" />
               </InputGroup.Button>
             </InputGroup>
           </Form.Group>

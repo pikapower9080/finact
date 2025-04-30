@@ -1,3 +1,5 @@
+import "material-icons/iconfont/filled.css";
+
 export default function Icon(props) {
   let classes = ["material-icons", "md-24", "md-light"];
 
@@ -7,6 +9,10 @@ export default function Icon(props) {
 
   if (props.noSpace) {
     classes.push("no-space");
+  }
+
+  if (props.size == "tiny") {
+    classes.push("md-16");
   }
 
   return (

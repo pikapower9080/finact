@@ -12,6 +12,8 @@ import NowPlaying from "./Components/NowPlaying";
 import Collection from "./Routes/Collections/:id";
 import NotFound from "./Routes/NotFound";
 import Playlist from "./Routes/Playlists/:id";
+import Album from "./Routes/Albums/:id";
+import Search from "./Routes/Search";
 
 const storage = getStorage();
 
@@ -52,6 +54,8 @@ function App() {
                       <Route path="/playlists/:id" element={<Playlist />} />
                       <Route path="/collections" element={<Collections />} />
                       <Route path="/collections/:id" element={<Collection />} />
+                      <Route path="/search" element={<Search />} />
+                      <Route path="/albums/:id" element={<Album />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </HashRouter>
