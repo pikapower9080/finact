@@ -80,3 +80,9 @@ i.material-icons.no-space {
 .md-16 {
   font-size: 16px !important;
 }
+
+.single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

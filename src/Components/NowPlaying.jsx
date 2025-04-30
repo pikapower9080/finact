@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef } from "react";
 import { PlaybackContext } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
+import { jellyfinRequest } from "../Util/Network";
 const storage = getStorage();
 
 export default function NowPlaying(props) {
@@ -19,6 +20,23 @@ export default function NowPlaying(props) {
     if (audioRef.current) {
       if (props.state.playing) {
         audioRef.current.play();
+        if (props.state.position == 0) {
+          jellyfinRequest(`/Sessions/Playing`, {
+            method: "POST",
+            body: JSON.stringify({
+              CanSeek: false,
+              Item: props.state.item,
+              ItemId: props.state.item.Id,
+              IsPaused: false,
+              IsMuted: false,
+              PositionTicks: 0,
+              VolumeLevel: 100
+            }),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+        }
       } else {
         audioRef.current.pause();
       }
