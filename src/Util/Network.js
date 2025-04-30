@@ -20,14 +20,8 @@ export async function jellyfinRequest(url, options = {}) {
   }
   options.headers = {
     ...options.headers,
-    "X-Emby-Authorization": `MediaBrowser Client="Finact", Device="Web", DeviceId="Web", Version="1.0.0"`
+    "X-Emby-Authorization": `MediaBrowser Client="Finact", Device="Web", DeviceId="Web", Version="1.0.0"${accessToken && `, Token="${accessToken}"`}`
   };
-  if (accessToken) {
-    options.headers = {
-      ...options.headers,
-      "X-Emby-Token": accessToken
-    };
-  }
   return fetchJSON(`${serverURL}${url}`, options);
 }
 
