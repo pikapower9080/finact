@@ -35,7 +35,7 @@ export default function NowPlaying(props) {
             headers: {
               "Content-Type": "application/json"
             }
-          });
+          }).catch(() => {});
         }
       } else {
         audioRef.current.pause();
