@@ -1,4 +1,5 @@
 import { getCacheStorage, getStorage } from "../storage";
+import { getDeviceId } from "./Formatting";
 const storage = getStorage();
 const cacheStorage = getCacheStorage();
 
@@ -20,7 +21,7 @@ export async function jellyfinRequest(url, options = {}) {
   }
   options.headers = {
     ...options.headers,
-    "X-Emby-Authorization": `MediaBrowser Client="Finact", Device="Web", DeviceId="Web", Version="1.0.0"${accessToken && `, Token="${accessToken}"`}`
+    Authorization: `MediaBrowser Client="Finact", Device="Web", DeviceId="${getDeviceId()}", Version="1.0.0"${accessToken && `, Token="${accessToken}"`}`
   };
   return fetchJSON(`${serverURL}${url}`, options);
 }

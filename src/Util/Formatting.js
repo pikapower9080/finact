@@ -51,3 +51,26 @@ export function formatSeconds(seconds, pretty = false, includeSeconds = true) {
   // Remove any trailing colon or space
   return formattedTime.trim().replace(/[:\s]$/, "");
 }
+
+// https://github.com/jellyfin/jellyfin-web/blob/44dae15452ec0961129d1f6c15b7d0e46cd2f735/src/components/apphost.js#L121-L131
+export function generateDeviceId() {
+  const keys = [];
+
+  keys.push(navigator.userAgent);
+  keys.push(new Date().getTime());
+  if (window.btoa) {
+    return btoa(keys.join("|")).replaceAll("=", "1");
+  }
+
+  return new Date().getTime();
+}
+
+export function getDeviceId() {
+  let deviceId = storage.get("DeviceId");
+
+  if (deviceId) return deviceId;
+
+  deviceId = generateDeviceId();
+  storage.set("DeviceId", deviceId);
+  return deviceId;
+}
