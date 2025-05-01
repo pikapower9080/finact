@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, Fragment } from "react";
 import { useParams } from "react-router";
 import { Heading, Button, List, HStack, Avatar, Text, VStack, ButtonGroup, Stat, Image } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
@@ -12,6 +12,28 @@ import { ItemListEntry } from "../../Components/ItemListEntry";
 
 const storage = getStorage();
 
+function getDiscGroups(items) {
+  let hasDiscs = false;
+  let discNumbers = [];
+  let discs = [];
+  items.forEach((item) => {
+    if (item.ParentIndexNumber) {
+      hasDiscs = true;
+      if (!discNumbers.includes(item.ParentIndexNumber)) {
+        discNumbers.push(item.ParentIndexNumber);
+      }
+    }
+  });
+  if (hasDiscs) {
+    discNumbers.forEach((discNumber) => {
+      discs[discNumber] = items.filter((item) => item.ParentIndexNumber === discNumber);
+    });
+    return discs;
+  } else {
+    return [items];
+  }
+}
+
 export default function Album() {
   const { id } = useParams();
 
@@ -23,20 +45,12 @@ export default function Album() {
     const fetchPlaylistData = async () => {
       const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete&SortBy=IndexNumber`)]);
       console.log(responses);
-      setData({ data: responses[0], items: responses[1] });
+      setData({ data: responses[0], discs: getDiscGroups(responses[1].Items) });
       setLoading(false);
     };
 
     fetchPlaylistData();
   }, []);
-
-  const handleSortEnd = ({ oldIndex, newIndex }) =>
-    setData((prvData) => {
-      const moveData = prvData.items.Items.splice(oldIndex, 1);
-      const newData = [...prvData.items.Items];
-      newData.splice(newIndex, 0, moveData[0]);
-      return { items: { ...data.items, Items: newData }, data: prvData.data };
-    }, []);
 
   return (
     <>
@@ -72,7 +86,7 @@ export default function Album() {
               </HStack>
             </HStack.Item>
           </HStack>
-          <Spacer height={10} />
+          {/* <Spacer height={10} /> */}
           {/* {data.data.Overview && data.data.Overview.length > 0 && (
             <>
               <Text>{data.data.Overview}</Text>
@@ -81,11 +95,27 @@ export default function Album() {
           )} */}
 
           <Spacer height={10} />
-          <List bordered hover /*sortable onSort={handleSortEnd}*/>
-            {data.items.Items.map((item, index) => (
-              <ItemListEntry item={item} index={index} type="album" key={item.Id} />
-            ))}
-          </List>
+          {data.discs.map((discItems, index) => {
+            if (!discItems || discItems.length === 0) {
+              return null;
+            }
+            return (
+              <Fragment key={index}>
+                {data.discs.filter((x) => x != null).length > 1 && (
+                  <>
+                    <Heading level={4}>Disc {index}</Heading>
+                  </>
+                )}
+                <Spacer height={5} />
+                <List bordered hover /*sortable onSort={handleSortEnd}*/>
+                  {discItems.map((item, index) => (
+                    <ItemListEntry item={item} index={index} type="album" key={item.Id} />
+                  ))}
+                </List>
+                <Spacer height={5} />
+              </Fragment>
+            );
+          })}
         </>
       ) : (
         ""
