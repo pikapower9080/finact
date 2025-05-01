@@ -90,3 +90,18 @@ i.material-icons.no-space {
 .red-400 {
   color: #ef5350 !important;
 }
+
+.rs-sidenav-item {
+  padding-left: 20px !important;
+}
+
+.rs-sidenav-item span {
+  margin-left: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(calc(-50% - 2.5px));
+}
+
+div.rs-drawer-header img {
+  transform: translateY(-10%);
+}

@@ -1,38 +1,77 @@
-import { Header, Navbar, Nav, Avatar, Image } from "rsuite";
+import { Header, Navbar, Nav, Avatar, Image, Drawer, HStack, Text, Sidenav } from "rsuite";
 import { getStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getUser } from "../App";
+import { useMediaQuery } from "rsuite/esm/useMediaQuery/useMediaQuery";
+import { useState } from "react";
 
 const storage = getStorage();
 
 export default function MainHeader(props) {
+  const [collapsedHeader] = useMediaQuery("(max-width: 571px)");
+  const [sideNavOpen, setSideNavOpen] = useState(false);
+
+  function closeSideNav() {
+    if (sideNavOpen) {
+      setSideNavOpen(false);
+    }
+  }
+
   function LibraryNavigation() {
     return (
       <>
-        <Nav.Item href="/#">
+        <Nav.Item href="/#" onClick={closeSideNav}>
           <Icon icon="home" />
-          Home
+          <span>Home</span>
         </Nav.Item>
-        <Nav.Item href="/#playlists">
+        <Nav.Item href="/#playlists" onClick={closeSideNav}>
           <Icon icon="video_library" />
-          Playlists
+          <span>Playlists</span>
         </Nav.Item>
-        <Nav.Item href="/#collections">
+        <Nav.Item href="/#collections" onClick={closeSideNav}>
           <Icon icon="photo_library" />
-          Collections
+          <span>Collections</span>
         </Nav.Item>
       </>
     );
   }
   return (
     <Header>
+      <Drawer open={sideNavOpen && collapsedHeader} onClose={() => setSideNavOpen(false)} placement="left" size={"65vw"}>
+        <Drawer.Header>
+          <Drawer.Title>
+            <Image src="finact.png" style={{ height: "1em", marginRight: "5px" }} />
+            Finact
+          </Drawer.Title>
+        </Drawer.Header>
+
+        <Drawer.Body style={{ paddingInline: 0, paddingTop: 5 }}>
+          <Sidenav appearance="subtle">
+            <Sidenav.Body>
+              <Nav>
+                <LibraryNavigation />
+              </Nav>
+            </Sidenav.Body>
+          </Sidenav>
+        </Drawer.Body>
+      </Drawer>
       <Navbar>
-        <Navbar.Brand>
-          <Image src="finact.png" style={{ height: "1.5em", marginRight: "5px" }} />
-          Finact
-        </Navbar.Brand>
-        <Nav>{props.user ? <LibraryNavigation /> : ""}</Nav>
+        {!collapsedHeader ? (
+          <>
+            <Navbar.Brand>
+              <Image src="finact.png" style={{ height: "1.5em", marginRight: "5px" }} />
+              Finact
+            </Navbar.Brand>
+            <Nav>{props.user ? <LibraryNavigation /> : ""}</Nav>
+          </>
+        ) : (
+          <Nav>
+            <Nav.Item onClick={() => setSideNavOpen(!sideNavOpen)}>
+              <Icon icon="menu" noSpace />
+            </Nav.Item>
+          </Nav>
+        )}
         <Nav pullRight>
           {props.user ? (
             <>
