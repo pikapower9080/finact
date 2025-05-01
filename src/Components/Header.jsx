@@ -40,6 +40,7 @@ export default function MainHeader(props) {
                 <Icon icon="search" noSpace />
               </Nav.Item>
               <Menu
+                align="end"
                 menuButton={
                   <Nav.Item title="Profile">
                     <Avatar circle size="sm" src={`${storage.get("serverURL")}/Users/${props.user.Id}/Images/Primary`} />

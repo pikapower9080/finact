@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from "@szhsin/react-menu";
+import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getStorage } from "../storage";
 import { getUser, LoadingContext } from "../App";
@@ -9,11 +9,17 @@ const storage = getStorage();
 
 export default function ItemContextMenu({ item, menuButton }) {
   const { loading, setLoading } = useContext(LoadingContext);
+  const user = getUser();
 
   return (
     <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
+      <MenuItem href={"/#albums/" + item.AlbumId}>
+        <Icon icon="album" />
+        Go to Album
+      </MenuItem>
+      <MenuDivider />
       <MenuItem
-        disabled={getUser().Policy.EnableContentDownloading === false}
+        disabled={user.Policy.EnableContentDownloading === false}
         onClick={async () => {
           setLoading(true);
           try {
@@ -33,6 +39,19 @@ export default function ItemContextMenu({ item, menuButton }) {
       >
         <Icon icon="download" />
         Download
+      </MenuItem>
+      <MenuItem
+        disabled={user.Policy.EnableContentDownloading === false}
+        onClick={() => {
+          navigator.clipboard.writeText(`${storage.get("serverURL")}/Items/${item.Id}/Download?api_key=${storage.get("AccessToken")}`);
+        }}
+      >
+        <Icon icon="link" />
+        Copy Stream URL
+      </MenuItem>
+      <MenuItem onClick={() => navigator.clipboard.writeText(item.Id)}>
+        <Icon icon="content_copy" />
+        Copy Item ID
       </MenuItem>
     </Menu>
   );
