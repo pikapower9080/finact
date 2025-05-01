@@ -5,6 +5,8 @@ import { PlaybackContext } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
+import ItemContextMenu from "./ItemContextMenu";
+import Spacer from "./Spacer";
 const storage = getStorage();
 
 export default function NowPlaying(props) {
@@ -137,14 +139,33 @@ export default function NowPlaying(props) {
           </ButtonGroup>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-          <ButtonGroup>
-            <Button appearance="subtle">
-              <Icon icon={"favorite"} noSpace />
-            </Button>
-            <Button appearance="subtle">
-              <Icon icon={"more_vert"} noSpace />
-            </Button>
-          </ButtonGroup>
+          <Button
+            className="square"
+            appearance="subtle"
+            onClick={() => {
+              setPlaybackState((prevState) => ({
+                ...prevState,
+                item: {
+                  ...prevState.item,
+                  UserData: {
+                    ...prevState.item.UserData,
+                    IsFavorite: !prevState.item.UserData.IsFavorite
+                  }
+                }
+              }));
+            }}
+          >
+            <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
+          </Button>
+          <Spacer width={9} />
+          <ItemContextMenu
+            item={props.state.item}
+            menuButton={
+              <Button appearance="subtle" className="square">
+                <Icon icon="more_vert" noSpace />
+              </Button>
+            }
+          />
         </FlexboxGrid.Item>
       </FlexboxGrid>
     </Navbar>

@@ -8,7 +8,7 @@ body {
 
 i.material-icons {
   margin-right: 5px;
-  color: inherit !important;
+  color: inherit;
 }
 i.material-icons.no-space {
   margin-right: 0;
@@ -85,4 +85,8 @@ i.material-icons.no-space {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.red-400 {
+  color: #ef5350 !important;
 }

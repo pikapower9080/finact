@@ -13,7 +13,7 @@ export async function fetchJSON(url, options = {}) {
   }
 }
 
-export async function jellyfinRequest(url, options = {}) {
+export async function jellyfinRequest(url, options = {}, format = "json") {
   const serverURL = storage.get("serverURL");
   const accessToken = storage.get("AccessToken");
   if (!serverURL) {
@@ -23,7 +23,13 @@ export async function jellyfinRequest(url, options = {}) {
     ...options.headers,
     Authorization: `MediaBrowser Client="Finact", Device="Web", DeviceId="${getDeviceId()}", Version="1.0.0"${accessToken && `, Token="${accessToken}"`}`
   };
-  return fetchJSON(`${serverURL}${url}`, options);
+  if (format === "json") {
+    return fetchJSON(`${serverURL}${url}`, options);
+  } else {
+    console.log(options);
+    const response = await fetch(`${serverURL}${url}`, options);
+    return await response[format]();
+  }
 }
 
 export async function getLibrary(type) {

@@ -3,6 +3,7 @@ import { List, HStack, VStack, Text, Button, ButtonGroup, Avatar } from "rsuite"
 import { PlaybackContext } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";
+import ItemContextMenu from "./ItemContextMenu";
 
 export function ItemListEntry({ item, index, type }) {
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
@@ -39,17 +40,20 @@ export function ItemListEntry({ item, index, type }) {
               {formatTimestamp(item.RunTimeTicks / 10000000)}
             </Text>
           </VStack>
-          <ButtonGroup>
-            <Button
-              appearance="subtle"
-              className="square"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <Icon icon="more_vert" noSpace />
-            </Button>
-          </ButtonGroup>
+          <ItemContextMenu
+            item={item}
+            menuButton={
+              <Button
+                appearance="subtle"
+                className="square"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Icon icon="more_vert" noSpace />
+              </Button>
+            }
+          />
         </HStack.Item>
       </HStack>
     </List.Item>
