@@ -20,6 +20,7 @@
     "react-blurhash": "^0.3.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.5.2",
+    "react-scrubber": "^2.1.0",
     "rsuite": "^5.80.1"
   },
   "devDependencies": {
