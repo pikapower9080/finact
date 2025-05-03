@@ -22,11 +22,13 @@ export default function Visualizer(props) {
     let closing = false;
     const audioContext = new AudioContext();
 
-    const sourceNode = audioContext.createMediaElementSource(props.audioRef.current);
+    // const sourceNode = audioContext.createMediaElementSource(props.audioRef.current);
+    const streamNode = audioContext.createMediaStreamSource(props.audioRef.current.captureStream());
+    props.audioRef.current.muted = true;
 
     const gainNode = audioContext.createGain();
 
-    sourceNode.connect(gainNode);
+    streamNode.connect(gainNode);
     gainNode.connect(audioContext.destination);
     // gainNode.connect(audioContext.destination);
 
@@ -55,8 +57,7 @@ export default function Visualizer(props) {
 
     return () => {
       closing = true;
-      sourceNode.disconnect(gainNode);
-      gainNode.disconnect(audioContext.destination);
+      props.audioRef.current.muted = false;
       audioContext.close();
     };
   }, []);
