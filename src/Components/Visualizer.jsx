@@ -4,8 +4,7 @@ import { LoadingContext } from "../App";
 const canvasStyle = {
   position: "fixed",
   top: 0,
-  left: 0,
-  zIndex: -1
+  left: 0
 };
 
 export default function Visualizer(props) {
