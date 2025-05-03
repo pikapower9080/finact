@@ -113,3 +113,7 @@ div.rs-drawer-header img {
 .rs-sidenav-item .rs-ripple-pond {
   visibility: hidden;
 }
+
+.now-playing-buttons button:not(:last-child) {
+  margin-right: 9px;
+}

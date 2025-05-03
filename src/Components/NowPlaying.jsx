@@ -203,13 +203,12 @@ export default function NowPlaying(props) {
               </Button>
             </ButtonGroup>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
             {visualizerSupported.current && (
               <Button className="square" appearance="subtle" title="Toggle Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
                 <Icon icon={"music_video"} noSpace />
               </Button>
             )}
-            <Spacer width={9} />
             <Button
               className="square"
               appearance="subtle"
@@ -229,7 +228,6 @@ export default function NowPlaying(props) {
             >
               <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
             </Button>
-            <Spacer width={9} />
             <ItemContextMenu
               item={props.state.item}
               menuButton={
