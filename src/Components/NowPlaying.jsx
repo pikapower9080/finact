@@ -7,15 +7,24 @@ import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
 import Spacer from "./Spacer";
+import Visualizer from "./Visualizer";
 import { Scrubber } from "react-scrubber";
 import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
+import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
+
+  let visualizerSupported = useRef(false);
+
+  if (visualizerSupported.current == false && isButterchurnSupported() && "captureStream" in new Audio()) {
+    visualizerSupported.current = true;
+  }
 
   function getArtistDisplay(artists) {
     const artistNames = artists.join(" / ");
@@ -126,102 +135,112 @@ export default function NowPlaying(props) {
   }
 
   return (
-    <Navbar className="now-playing" style={{ flexBasis: 0 }}>
-      <audio ref={audioRef} src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
-      <Scrubber
-        min={0}
-        max={props.state.item.RunTimeTicks / 10000}
-        value={position}
-        tooltip={{
-          enabledOnHover: true,
-          enabledOnScrub: true,
-          formatString: (e) => {
-            const minutes = Math.floor(e / 1000 / 60);
-            const seconds = Math.floor((e / 1000) % 60);
-            const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-            const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-            return `${formattedMinutes}:${formattedSeconds}`;
-          }
-        }}
-        onScrubEnd={(e) => {
-          handleTimeUpdate(e);
-          isScrubbing.current = false;
-        }}
-        onScrubStart={(e) => {
-          // handleTimeUpdate(e);
-          setPosition(e);
-          isScrubbing.current = true;
-        }}
-        onScrubChange={setPosition}
-      />
-      <FlexboxGrid justify="space-around" align="middle">
-        <FlexboxGrid.Item style={{ flex: 1 }}>
-          <HStack spacing={10}>
-            <Avatar size="sm" src={getAlbumArt(props.state.item)} />
-            <div>
-              <VStack spacing={0}>
-                <Text weight="bold" className="no-select">
-                  {props.state.item.Name}
-                </Text>
-                <Text muted className="no-select">
-                  {getArtistDisplay(props.state.item.Artists)}
-                </Text>
-              </VStack>
-            </div>
-          </HStack>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-          <ButtonGroup>
-            <Button appearance="subtle">
-              <Icon icon={"skip_previous"} noSpace />
-            </Button>
+    <>
+      <audio ref={audioRef} crossOrigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
+      {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
+      <Navbar className="now-playing" style={{ flexBasis: 0 }}>
+        <Scrubber
+          min={0}
+          max={props.state.item.RunTimeTicks / 10000}
+          value={position}
+          tooltip={{
+            enabledOnHover: true,
+            enabledOnScrub: true,
+            formatString: (e) => {
+              const minutes = Math.floor(e / 1000 / 60);
+              const seconds = Math.floor((e / 1000) % 60);
+              const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+              const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+              return `${formattedMinutes}:${formattedSeconds}`;
+            }
+          }}
+          onScrubEnd={(e) => {
+            handleTimeUpdate(e);
+            isScrubbing.current = false;
+          }}
+          onScrubStart={(e) => {
+            // handleTimeUpdate(e);
+            setPosition(e);
+            isScrubbing.current = true;
+          }}
+          onScrubChange={setPosition}
+        />
+        <FlexboxGrid justify="space-around" align="middle">
+          <FlexboxGrid.Item style={{ flex: 1 }}>
+            <HStack spacing={10}>
+              <Avatar size="sm" src={getAlbumArt(props.state.item)} />
+              <div>
+                <VStack spacing={0}>
+                  <Text weight="bold" className="no-select">
+                    {props.state.item.Name}
+                  </Text>
+                  <Text muted className="no-select">
+                    {getArtistDisplay(props.state.item.Artists)}
+                  </Text>
+                </VStack>
+              </div>
+            </HStack>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <ButtonGroup>
+              <Button appearance="subtle">
+                <Icon icon={"skip_previous"} noSpace />
+              </Button>
+              <Button
+                appearance="subtle"
+                onClick={() => {
+                  if (playbackState.playing) {
+                    pause();
+                  } else {
+                    play();
+                  }
+                }}
+              >
+                <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
+              </Button>
+              <Button appearance="subtle">
+                <Icon icon={"skip_next"} noSpace />
+              </Button>
+            </ButtonGroup>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            {visualizerSupported.current && (
+              <Button className="square" appearance="subtle" title="Toggle Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
+                <Icon icon={"music_video"} noSpace />
+              </Button>
+            )}
+            <Spacer width={9} />
             <Button
+              className="square"
               appearance="subtle"
+              title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
               onClick={() => {
-                if (playbackState.playing) {
-                  pause();
-                } else {
-                  play();
-                }
+                setPlaybackState((prevState) => ({
+                  ...prevState,
+                  item: {
+                    ...prevState.item,
+                    UserData: {
+                      ...prevState.item.UserData,
+                      IsFavorite: !prevState.item.UserData.IsFavorite
+                    }
+                  }
+                }));
               }}
             >
-              <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
+              <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
             </Button>
-            <Button appearance="subtle">
-              <Icon icon={"skip_next"} noSpace />
-            </Button>
-          </ButtonGroup>
-        </FlexboxGrid.Item>
-        <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            className="square"
-            appearance="subtle"
-            onClick={() => {
-              setPlaybackState((prevState) => ({
-                ...prevState,
-                item: {
-                  ...prevState.item,
-                  UserData: {
-                    ...prevState.item.UserData,
-                    IsFavorite: !prevState.item.UserData.IsFavorite
-                  }
-                }
-              }));
-            }}
-          >
-            <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
-          </Button>
-          <Spacer width={9} />
-          <ItemContextMenu
-            item={props.state.item}
-            menuButton={
-              <Button appearance="subtle" className="square">
-                <Icon icon="more_vert" noSpace />
-              </Button>
-            }
-          />
-        </FlexboxGrid.Item>
-      </FlexboxGrid>
-    </Navbar>
+            <Spacer width={9} />
+            <ItemContextMenu
+              item={props.state.item}
+              menuButton={
+                <Button appearance="subtle" className="square">
+                  <Icon icon="more_vert" noSpace />
+                </Button>
+              }
+            />
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
+      </Navbar>
+    </>
   );
 }

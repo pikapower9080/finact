@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["Blurhash", "finact", "jellyfin", "rsuite", "szhsin"],
+  "cSpell.words": [
+    "Blurhash",
+    "Butterchurn",
+    "finact",
+    "jellyfin",
+    "rsuite",
+    "szhsin"
+  ],
   "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",
   "[javascript]": {
