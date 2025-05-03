@@ -1,3 +1,7 @@
+:root:has(body.rs-theme-dark) {
+  color-scheme: dark;
+}
+
 #root {
   height: 100vh;
 }
