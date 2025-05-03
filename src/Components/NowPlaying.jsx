@@ -1,17 +1,19 @@
 import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Slider, Text } from "rsuite";
 import { getStorage } from "../storage";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { PlaybackContext } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
 import Spacer from "./Spacer";
+import Visualizer from "./Visualizer";
 const storage = getStorage();
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const [visualizerOpen, setVisualizerOpen] = useState(false);
 
   function getArtistDisplay(artists) {
     const artistNames = artists.join(" / ");
@@ -79,7 +81,7 @@ export default function NowPlaying(props) {
 
   return (
     <Navbar className="now-playing" style={{ flexBasis: 0 }}>
-      <audio ref={audioRef} src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
+      <audio ref={audioRef} crossorigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
       <Slider
         className="now-playing-slider"
         progress
@@ -139,9 +141,14 @@ export default function NowPlaying(props) {
           </ButtonGroup>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <Button className="square" appearance="subtle" title="Open Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
+            <Icon icon={"music_video"} noSpace />
+          </Button>
+          <Spacer width={9} />
           <Button
             className="square"
             appearance="subtle"
+            title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
             onClick={() => {
               setPlaybackState((prevState) => ({
                 ...prevState,
@@ -168,6 +175,7 @@ export default function NowPlaying(props) {
           />
         </FlexboxGrid.Item>
       </FlexboxGrid>
+      {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
     </Navbar>
   );
 }
