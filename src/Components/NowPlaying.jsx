@@ -8,12 +8,16 @@ import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
 import Spacer from "./Spacer";
 import Visualizer from "./Visualizer";
+import { Scrubber } from "react-scrubber";
+import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
+  const [position, setPosition] = useState(0);
+  const isScrubbing = useRef(false);
 
   function getArtistDisplay(artists) {
     const artistNames = artists.join(" / ");
@@ -25,6 +29,7 @@ export default function NowPlaying(props) {
       if (props.state.playing) {
         audioRef.current.play();
         if (props.state.position == 0) {
+          setPosition(props.state.position);
           jellyfinRequest(`/Sessions/Playing`, {
             method: "POST",
             body: JSON.stringify({
@@ -44,7 +49,6 @@ export default function NowPlaying(props) {
       } else {
         audioRef.current.pause();
       }
-      console.log("Current time:", props.state.position);
       audioRef.current.currentTime = props.state.position;
     }
 
@@ -64,44 +68,93 @@ export default function NowPlaying(props) {
       });
 
       mediaSession.setActionHandler("play", () => {
-        setPlaybackState((prevState) => ({
-          ...prevState,
-          playing: true
-        }));
+        play();
       });
 
       mediaSession.setActionHandler("pause", () => {
+        pause();
+      });
+
+      mediaSession.setActionHandler("seekto", (details) => {
+        console.log(details);
+        const newTime = details.fastSeek ? details.fastSeek : details.seekTime;
         setPlaybackState((prevState) => ({
           ...prevState,
-          playing: false
+          position: newTime
         }));
+        setPosition(newTime * 1000);
       });
     }
   }, [props.state]);
 
+  function handleTimeUpdate(e) {
+    const newTime = e / 1000;
+    setPlaybackState((prevState) => ({
+      ...prevState,
+      position: newTime
+    }));
+    setPosition(e);
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (audioRef.current && !isScrubbing.current) {
+        setPosition(audioRef.current.currentTime * 1000);
+      }
+    }, 1000);
+    if (audioRef.current && !isScrubbing.current) {
+      setPosition(audioRef.current.currentTime * 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  function play() {
+    setPlaybackState((prevState) => ({
+      ...prevState,
+      playing: true
+    }));
+    setPosition(audioRef.current.currentTime * 1000);
+  }
+
+  function pause() {
+    setPlaybackState((prevState) => ({
+      ...prevState,
+      position: audioRef.current.currentTime,
+      playing: false
+    }));
+    setPosition(audioRef.current.currentTime * 1000);
+  }
+
   return (
     <Navbar className="now-playing" style={{ flexBasis: 0 }}>
       <audio ref={audioRef} crossorigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
-      <Slider
-        className="now-playing-slider"
-        progress
+      <Scrubber
+        min={0}
         max={props.state.item.RunTimeTicks / 10000}
-        defaultValue={0}
-        step={1000}
-        renderTooltip={(e) => {
-          const minutes = Math.floor(e / 1000 / 60);
-          const seconds = Math.floor((e / 1000) % 60);
-          const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-          const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-          return `${formattedMinutes}:${formattedSeconds}`;
+        value={position}
+        tooltip={{
+          enabledOnHover: true,
+          enabledOnScrub: true,
+          formatString: (e) => {
+            const minutes = Math.floor(e / 1000 / 60);
+            const seconds = Math.floor((e / 1000) % 60);
+            const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+            const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+            return `${formattedMinutes}:${formattedSeconds}`;
+          }
         }}
-        onChangeCommitted={(e) => {
-          const newTime = e / 1000;
-          setPlaybackState((prevState) => ({
-            ...prevState,
-            position: newTime
-          }));
+        onScrubEnd={(e) => {
+          handleTimeUpdate(e);
+          isScrubbing.current = false;
         }}
+        onScrubStart={(e) => {
+          // handleTimeUpdate(e);
+          setPosition(e);
+          isScrubbing.current = true;
+        }}
+        onScrubChange={setPosition}
       />
       <FlexboxGrid justify="space-around" align="middle">
         <FlexboxGrid.Item style={{ flex: 1 }}>
@@ -127,10 +180,11 @@ export default function NowPlaying(props) {
             <Button
               appearance="subtle"
               onClick={() => {
-                setPlaybackState((prevState) => ({
-                  ...prevState,
-                  playing: !prevState.playing
-                }));
+                if (playbackState.playing) {
+                  pause();
+                } else {
+                  play();
+                }
               }}
             >
               <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
