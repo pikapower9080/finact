@@ -129,7 +129,7 @@ export default function NowPlaying(props) {
 
   return (
     <Navbar className="now-playing" style={{ flexBasis: 0 }}>
-      <audio ref={audioRef} crossorigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
+      <audio ref={audioRef} crossOrigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
       <Scrubber
         min={0}
         max={props.state.item.RunTimeTicks / 10000}

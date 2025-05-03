@@ -19,6 +19,7 @@ export default function Visualizer(props) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    let closing = false;
     const audioContext = new AudioContext();
 
     const sourceNode = audioContext.createMediaElementSource(props.audioRef.current);
@@ -43,11 +44,22 @@ export default function Visualizer(props) {
     function render() {
       visualizer.render();
 
+      if (closing) {
+        return;
+      }
+
       requestAnimationFrame(render);
     }
 
     render();
-  }, [playbackState]);
+
+    return () => {
+      closing = true;
+      sourceNode.disconnect(gainNode);
+      gainNode.disconnect(audioContext.destination);
+      audioContext.close();
+    };
+  }, []);
 
   return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} style={canvasStyle}></canvas>;
 }
