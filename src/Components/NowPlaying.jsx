@@ -11,6 +11,7 @@ import Visualizer from "./Visualizer";
 import { Scrubber } from "react-scrubber";
 import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
+import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
@@ -18,6 +19,12 @@ export default function NowPlaying(props) {
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
+
+  let visualizerSupported = useRef(false);
+
+  if (visualizerSupported.current == false && isButterchurnSupported() && "captureStream" in new Audio()) {
+    visualizerSupported.current = true;
+  }
 
   function getArtistDisplay(artists) {
     const artistNames = artists.join(" / ");
@@ -195,9 +202,11 @@ export default function NowPlaying(props) {
           </ButtonGroup>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-          <Button className="square" appearance="subtle" title="Open Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
-            <Icon icon={"music_video"} noSpace />
-          </Button>
+          {visualizerSupported.current && (
+            <Button className="square" appearance="subtle" title="Toggle Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
+              <Icon icon={"music_video"} noSpace />
+            </Button>
+          )}
           <Spacer width={9} />
           <Button
             className="square"

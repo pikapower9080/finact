@@ -22,7 +22,6 @@ export default function Visualizer(props) {
     let closing = false;
     const audioContext = new AudioContext();
 
-    // const sourceNode = audioContext.createMediaElementSource(props.audioRef.current);
     const streamNode = audioContext.createMediaStreamSource(props.audioRef.current.captureStream());
     props.audioRef.current.muted = true;
 
@@ -30,7 +29,6 @@ export default function Visualizer(props) {
 
     streamNode.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    // gainNode.connect(audioContext.destination);
 
     const visualizer = butterchurn.createVisualizer(audioContext, canvasRef.current, {
       width: window.innerWidth,
