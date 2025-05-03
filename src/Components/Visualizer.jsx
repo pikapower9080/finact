@@ -1,12 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
-import { PlaybackContext } from "../App";
-
-import butterchurn from "butterchurn";
-import butterchurnPresets from "butterchurn-presets";
+import { LoadingContext } from "../App";
 
 const canvasStyle = {
-  // width: "100%",
-  // height: "100%",
   position: "fixed",
   top: 0,
   left: 0,
@@ -14,44 +9,52 @@ const canvasStyle = {
 };
 
 export default function Visualizer(props) {
-  const { playbackState } = useContext(PlaybackContext);
+  const { setLoading } = useContext(LoadingContext);
 
   const canvasRef = useRef(null);
 
   useEffect(() => {
     let closing = false;
     const audioContext = new AudioContext();
+    setLoading(true);
+    async function setup() {
+      const butterchurn = (await import("butterchurn")).default;
+      const butterchurnPresets = (await import("butterchurn-presets")).default;
 
-    const streamNode = audioContext.createMediaStreamSource(props.audioRef.current.captureStream());
-    props.audioRef.current.muted = true;
+      const streamNode = audioContext.createMediaStreamSource(props.audioRef.current.captureStream());
+      props.audioRef.current.muted = true;
 
-    const gainNode = audioContext.createGain();
+      const gainNode = audioContext.createGain();
 
-    streamNode.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+      streamNode.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-    const visualizer = butterchurn.createVisualizer(audioContext, canvasRef.current, {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      pixelRatio: window.devicePixelRatio || 1,
-      textureRatio: 1
-    });
+      const visualizer = butterchurn.createVisualizer(audioContext, canvasRef.current, {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        pixelRatio: window.devicePixelRatio || 1,
+        textureRatio: 1
+      });
 
-    visualizer.connectAudio(gainNode);
+      visualizer.connectAudio(gainNode);
 
-    visualizer.loadPreset(Object.values(butterchurnPresets.getPresets())[0]);
+      visualizer.loadPreset(Object.values(butterchurnPresets.getPresets())[0]);
 
-    function render() {
-      visualizer.render();
+      setLoading(false);
+      function render() {
+        visualizer.render();
 
-      if (closing) {
-        return;
+        if (closing) {
+          return;
+        }
+
+        requestAnimationFrame(render);
       }
 
-      requestAnimationFrame(render);
+      render();
     }
 
-    render();
+    setup();
 
     return () => {
       closing = true;
