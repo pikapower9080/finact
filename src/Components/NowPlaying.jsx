@@ -112,7 +112,7 @@ export default function NowPlaying(props) {
       if (audioRef.current && !isScrubbing.current) {
         setPosition(audioRef.current.currentTime * 1000);
       }
-    }, 1000);
+    }, 500);
     if (audioRef.current && !isScrubbing.current) {
       setPosition(audioRef.current.currentTime * 1000);
     }
