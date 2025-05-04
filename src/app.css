@@ -39,19 +39,6 @@ i.material-icons.no-space {
   padding: 5px 10px;
 }
 
-.now-playing-slider {
-  margin-top: -9px;
-  margin-bottom: 5px;
-  width: 100vw;
-  position: absolute;
-  left: 0;
-  border-radius: 0;
-  & .rs-slider-progress-bar,
-  &.rs-slider-bar {
-    border-radius: 0;
-  }
-}
-
 .is-bold {
   font-weight: bold;
 }
@@ -114,6 +101,21 @@ div.rs-drawer-header img {
   visibility: hidden;
 }
 
-.now-playing-buttons button:not(:last-child) {
+.now-playing-buttons button:not(:last-of-type) {
   margin-right: 9px;
+}
+
+.scrubber,
+.scrubber .bar,
+.bar__progress,
+.bar__buffer {
+  border-radius: 6px;
+}
+
+.scrubber .bar__progress {
+  background-color: var(--rs-blue-500);
+}
+
+.scrubber {
+  margin-block: 3px;
 }
