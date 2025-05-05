@@ -40,7 +40,6 @@ export default function NowPlaying(props) {
             method: "POST",
             body: JSON.stringify({
               CanSeek: false,
-              Item: props.state.item,
               ItemId: props.state.item.Id,
               IsPaused: false,
               IsMuted: false,
@@ -98,6 +97,20 @@ export default function NowPlaying(props) {
       position: newTime
     }));
     setPosition(e);
+    jellyfinRequest(`/Sessions/Playing/Progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        CanSeek: false,
+        ItemId: props.state.item.Id,
+        IsPaused: !props.state.playing,
+        IsMuted: false,
+        PositionTicks: Math.floor(position * 10000),
+        VolumeLevel: 100
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).catch(() => {});
   }
 
   useEffect(() => {
@@ -120,6 +133,20 @@ export default function NowPlaying(props) {
       playing: true
     }));
     setPosition(audioRef.current.currentTime * 1000);
+    jellyfinRequest(`/Sessions/Playing/Progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        CanSeek: false,
+        ItemId: props.state.item.Id,
+        IsPaused: false,
+        IsMuted: false,
+        PositionTicks: Math.floor(position * 10000),
+        VolumeLevel: 100
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).catch(() => {});
   }
 
   function pause() {
@@ -129,6 +156,20 @@ export default function NowPlaying(props) {
       playing: false
     }));
     setPosition(audioRef.current.currentTime * 1000);
+    jellyfinRequest(`/Sessions/Playing/Progress`, {
+      method: "POST",
+      body: JSON.stringify({
+        CanSeek: false,
+        ItemId: props.state.item.Id,
+        IsPaused: true,
+        IsMuted: false,
+        PositionTicks: Math.floor(position * 10000),
+        VolumeLevel: 100
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).catch(() => {});
   }
 
   function next() {
