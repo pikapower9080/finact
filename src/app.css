@@ -127,8 +127,11 @@ div.rs-drawer-header img {
   background-color: var(--rs-body);
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .lyrics p {
+  display: block;
+  width: 98%;
   font-size: 30px;
   margin-bottom: 15px;
 }
