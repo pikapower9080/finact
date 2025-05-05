@@ -5,7 +5,7 @@ import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
 
-export function ItemListEntry({ item, index, type }) {
+export function ItemListEntry({ item, index, type, allItems }) {
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
 
   return (
@@ -14,11 +14,18 @@ export function ItemListEntry({ item, index, type }) {
       index={index}
       className="pointer"
       onClick={async () => {
-        setPlaybackState({
+        const newState = {
           item,
           playing: true,
           position: 0
-        });
+        };
+
+        if (allItems) {
+          const itemIndex = allItems.findIndex((i) => i.Id === item.Id);
+          newState.queue = { items: allItems, index: itemIndex };
+          console.log(newState.queue);
+        }
+        setPlaybackState(newState);
       }}
     >
       <HStack spacing={15} alignItems="center">

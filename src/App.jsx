@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { Container, Content, Loader } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import { SignIn } from "./Components/SignIn";
@@ -35,6 +35,10 @@ function App() {
   const [user, setUser] = useState(getUser);
   const [playbackState, setPlaybackState] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    window.playbackState = playbackState;
+  }, [playbackState]);
 
   return (
     <>

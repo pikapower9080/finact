@@ -109,7 +109,7 @@ export default function Album() {
                 <Spacer height={5} />
                 <List bordered hover /*sortable onSort={handleSortEnd}*/>
                   {discItems.map((item, index) => (
-                    <ItemListEntry item={item} index={index} type="album" key={item.Id} />
+                    <ItemListEntry item={item} index={index} type="album" allItems={data.discs.flat()} key={item.Id} />
                   ))}
                 </List>
                 <Spacer height={5} />

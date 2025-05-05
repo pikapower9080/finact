@@ -64,7 +64,7 @@ export default function Playlist() {
           <Spacer height={10} />
           <List bordered hover /*sortable onSort={handleSortEnd}*/>
             {data.items.Items.map((item, index) => (
-              <ItemListEntry item={item} index={index} key={item.Id} />
+              <ItemListEntry item={item} index={index} allItems={data.items.Items} key={item.Id} />
             ))}
           </List>
         </>

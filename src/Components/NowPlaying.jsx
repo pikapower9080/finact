@@ -74,13 +74,11 @@ export default function NowPlaying(props) {
         ]
       });
 
-      mediaSession.setActionHandler("play", () => {
-        play();
-      });
+      mediaSession.setActionHandler("play", play);
+      mediaSession.setActionHandler("pause", pause);
 
-      mediaSession.setActionHandler("pause", () => {
-        pause();
-      });
+      mediaSession.setActionHandler("previoustrack", previous);
+      mediaSession.setActionHandler("nexttrack", next);
 
       mediaSession.setActionHandler("seekto", (details) => {
         console.log(details);
@@ -134,6 +132,52 @@ export default function NowPlaying(props) {
     setPosition(audioRef.current.currentTime * 1000);
   }
 
+  function next() {
+    if ("queue" in playbackState) {
+      console.log(playbackState.queue.index, playbackState.queue.items.length - 1);
+      if (playbackState.queue.index == playbackState.queue.items.length - 1) {
+        // end playback on the last song
+        setPlaybackState(null);
+        return;
+      }
+      const nextItem = playbackState.queue.items[playbackState.queue.index + 1];
+      setPlaybackState({
+        item: nextItem,
+        playing: true,
+        position: 0,
+        queue: {
+          items: playbackState.queue.items,
+          index: playbackState.queue.index + 1
+        }
+      });
+    }
+  }
+
+  function previous() {
+    if ("queue" in playbackState && audioRef.current.currentTime < 4) {
+      if (playbackState.queue.index == 0) {
+        // end playback on the first song
+        setPlaybackState(null);
+        return;
+      }
+      const prevItem = playbackState.queue.items[playbackState.queue.index - 1];
+      setPlaybackState({
+        item: prevItem,
+        playing: true,
+        position: 0,
+        queue: {
+          items: playbackState.queue.items,
+          index: playbackState.queue.index - 1
+        }
+      });
+    } else {
+      setPlaybackState((prevState) => ({
+        ...prevState,
+        position: 0
+      }));
+    }
+  }
+
   return (
     <>
       <audio ref={audioRef} crossOrigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
@@ -183,7 +227,7 @@ export default function NowPlaying(props) {
           </FlexboxGrid.Item>
           <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <ButtonGroup>
-              <Button appearance="subtle">
+              <Button appearance="subtle" onClick={previous}>
                 <Icon icon={"skip_previous"} noSpace />
               </Button>
               <Button
@@ -198,7 +242,7 @@ export default function NowPlaying(props) {
               >
                 <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
               </Button>
-              <Button appearance="subtle">
+              <Button appearance="subtle" onClick={next}>
                 <Icon icon={"skip_next"} noSpace />
               </Button>
             </ButtonGroup>
