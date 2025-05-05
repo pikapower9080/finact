@@ -225,6 +225,9 @@ export default function NowPlaying(props) {
         crossOrigin="anonymous"
         src={`${storage.get("serverURL")}/Audio/${props.state.item.Id}/Universal?itemId=${props.state.item.Id}&deviceId=${storage.get("DeviceId")}&userId=${getUser().Id}&Container=opus,webm|opus,ts|mp3,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&api_key=${storage.get("AccessToken")}`}
         playsInline={true}
+        onEnded={(e) => {
+          next();
+        }}
       />
       {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
       <Navbar className="now-playing" style={{ flexBasis: 0 }}>
