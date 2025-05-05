@@ -1,12 +1,11 @@
 import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Slider, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
-import { PlaybackContext } from "../App";
+import { getUser, PlaybackContext } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
-import Spacer from "./Spacer";
 import Visualizer from "./Visualizer";
 import { Scrubber } from "react-scrubber";
 import "react-scrubber/lib/scrubber.css";
@@ -180,7 +179,12 @@ export default function NowPlaying(props) {
 
   return (
     <>
-      <audio ref={audioRef} crossOrigin="anonymous" src={`${storage.get("serverURL")}/Items/${props.state.item.Id}/Download?api_key=${storage.get("AccessToken")}`} playsInline={true} />
+      <audio
+        ref={audioRef}
+        crossOrigin="anonymous"
+        src={`${storage.get("serverURL")}/Audio/${props.state.item.Id}/Universal?itemId=${props.state.item.Id}&deviceId=${storage.get("DeviceId")}&userId=${getUser().Id}&Container=opus,webm|opus,ts|mp3,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&api_key=${storage.get("AccessToken")}`}
+        playsInline={true}
+      />
       {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
       <Navbar className="now-playing" style={{ flexBasis: 0 }}>
         <Scrubber
