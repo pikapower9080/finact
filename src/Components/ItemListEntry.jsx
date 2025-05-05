@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { List, HStack, VStack, Text, Button, ButtonGroup, Avatar } from "rsuite";
+import { List, HStack, VStack, Text, Button, Avatar } from "rsuite";
 import { PlaybackContext } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";

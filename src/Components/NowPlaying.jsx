@@ -1,4 +1,4 @@
-import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Slider, Text } from "rsuite";
+import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getUser, PlaybackContext } from "../App";

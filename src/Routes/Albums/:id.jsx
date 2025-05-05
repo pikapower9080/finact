@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext, Fragment } from "react";
 import { useParams } from "react-router";
-import { Heading, Button, List, HStack, Avatar, Text, VStack, ButtonGroup, Stat, Image } from "rsuite";
+import { Heading, List, HStack, Stat, Image } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
 import { getUser, LoadingContext } from "../../App";
-import { formatSeconds, formatTimestamp, getAlbumArt } from "../../Util/Formatting";
-import Icon from "../../Components/Icon";
-import { PlaybackContext } from "../../App";
+import { formatSeconds } from "../../Util/Formatting";
 import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";

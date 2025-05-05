@@ -1,4 +1,4 @@
-import { Header, Navbar, Nav, Avatar, Image, Drawer, HStack, Text, Sidenav } from "rsuite";
+import { Header, Navbar, Nav, Avatar, Image, Drawer, Sidenav } from "rsuite";
 import { getStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
