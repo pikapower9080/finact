@@ -1,8 +1,10 @@
 import { Form, InputGroup, Stack, Panel, useToaster, Notification } from "rsuite";
 import { getStorage } from "../storage";
 import { jellyfinRequest } from "../Util/Network";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Icon from "./Icon";
+import { GlobalState } from "../App";
+import { errorNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
@@ -10,13 +12,7 @@ export function SignIn(props) {
   const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const toaster = useToaster();
-
-  const errorNotification = (title = "An Error Has Occurred", message = "Fix it!") => (
-    <Notification type="error" header={title}>
-      <p>{message}</p>
-    </Notification>
-  );
+  const { toaster } = useContext(GlobalState);
 
   function ServerURL() {
     const styles = {

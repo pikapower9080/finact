@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { Container, Content, Loader } from "rsuite";
+import { Container, Content, Loader, useToaster } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import { SignIn } from "./Components/SignIn";
 import { getStorage } from "./storage";
@@ -35,11 +35,13 @@ function App() {
   const [playbackState, setPlaybackState] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const toaster = useToaster();
+
   useEffect(() => {
     window.playbackState = playbackState;
   }, [playbackState]);
 
-  const globalState = { playbackState, setPlaybackState, loading, setLoading };
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster };
 
   return (
     <>
