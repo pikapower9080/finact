@@ -1,14 +1,14 @@
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getStorage } from "../storage";
-import { getUser, LoadingContext } from "../App";
+import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
 import { useContext } from "react";
 
 const storage = getStorage();
 
 export default function ItemContextMenu({ item, menuButton }) {
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading } = useContext(GlobalState);
   const user = getUser();
 
   return (

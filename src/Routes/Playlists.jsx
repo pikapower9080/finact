@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Grid, Heading, Row } from "rsuite";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
-import { getUser, LoadingContext } from "../App";
+import { getUser, GlobalState } from "../App";
 import { getStorage } from "../storage";
 import ItemTile from "../Components/ItemTile";
 
@@ -9,7 +9,7 @@ const storage = getStorage();
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState(null);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading } = useContext(GlobalState);
 
   useEffect(() => {
     setLoading(true);

@@ -1,6 +1,6 @@
 import { useContext, useRef } from "react";
 import { Text } from "rsuite";
-import { PlaybackContext } from "../App";
+import { GlobalState } from "../App";
 import Icon from "./Icon";
 
 export default function Lyrics(props) {
@@ -8,7 +8,7 @@ export default function Lyrics(props) {
   const lyrics = props.lyrics;
   const lastLine = useRef(-1);
 
-  const { setPlaybackState } = useContext(PlaybackContext);
+  const { setPlaybackState } = useContext(GlobalState);
 
   let isSynced = true;
 

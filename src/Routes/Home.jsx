@@ -1,11 +1,11 @@
 import { Heading, Button, Placeholder, Row, Grid } from "rsuite";
-import { getUser, PlaybackContext } from "../App";
+import { getUser, GlobalState } from "../App";
 import { useContext, useState, useEffect } from "react";
 import { jellyfinRequest, getLibrary } from "../Util/Network";
 import ItemTile from "../Components/ItemTile";
 
 export default function Home() {
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
 
   return (
     <>
@@ -74,7 +74,7 @@ export function RecentlyAdded() {
 
 export function FrequentlyPlayed() {
   const [frequentlyPlayed, setFrequentlyPlayed] = useState();
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
 
   useEffect(() => {
     getLibrary("music").then((musicLibrary) => {

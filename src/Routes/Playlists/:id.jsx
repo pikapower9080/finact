@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
 import { Heading, List, HStack, Avatar, Text, Stat } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
-import { getUser, LoadingContext } from "../../App";
+import { getUser, GlobalState } from "../../App";
 import { formatSeconds } from "../../Util/Formatting";
 import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
@@ -14,7 +14,7 @@ export default function Playlist() {
   const { id } = useParams();
 
   const [data, setData] = useState(null);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading } = useContext(GlobalState);
 
   useEffect(() => {
     setLoading(true);

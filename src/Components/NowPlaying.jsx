@@ -1,7 +1,7 @@
 import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getUser, LoadingContext, PlaybackContext } from "../App";
+import { getUser, GlobalState } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
@@ -15,12 +15,12 @@ import Lyrics from "./Lyrics";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
-  const { setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(GlobalState);
 
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);

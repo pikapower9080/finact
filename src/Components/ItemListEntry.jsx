@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { List, HStack, VStack, Text, Button, Avatar } from "rsuite";
-import { PlaybackContext } from "../App";
+import { GlobalState } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
 
 export function ItemListEntry({ item, index, type, allItems }) {
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
 
   return (
     <List.Item
