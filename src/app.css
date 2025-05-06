@@ -119,3 +119,21 @@ div.rs-drawer-header img {
 .scrubber {
   margin-block: 3px;
 }
+
+.lyrics {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--rs-body);
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.lyrics p {
+  display: block;
+  width: 98%;
+  font-size: 30px;
+  margin-bottom: 15px;
+}

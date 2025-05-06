@@ -1,7 +1,7 @@
 import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getUser, PlaybackContext } from "../App";
+import { getUser, LoadingContext, PlaybackContext } from "../App";
 import { getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
@@ -11,15 +11,19 @@ import { Scrubber } from "react-scrubber";
 import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
+import Lyrics from "./Lyrics";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
   const { playbackState, setPlaybackState } = useContext(PlaybackContext);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
+  const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
+  const { setLoading } = useContext(LoadingContext);
 
   let visualizerSupported = useRef(false);
+  const fetchedLyrics = useRef(null);
 
   if (visualizerSupported.current == false && isButterchurnSupported() && "captureStream" in new Audio()) {
     visualizerSupported.current = true;
@@ -118,7 +122,7 @@ export default function NowPlaying(props) {
       if (audioRef.current && !isScrubbing.current) {
         setPosition(audioRef.current.currentTime * 1000);
       }
-    }, 1000);
+    }, 500);
     if (audioRef.current && !isScrubbing.current) {
       setPosition(audioRef.current.currentTime * 1000);
     }
@@ -230,6 +234,7 @@ export default function NowPlaying(props) {
         }}
       />
       {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
+      {lyricsOpen && <Lyrics lyrics={fetchedLyrics.current} state={props.state} position={position} />}
       <Navbar className="now-playing" style={{ flexBasis: 0 }}>
         <Scrubber
           min={0}
@@ -297,8 +302,41 @@ export default function NowPlaying(props) {
           </FlexboxGrid.Item>
           <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
             {visualizerSupported.current && (
-              <Button className="square" appearance="subtle" title="Toggle Visualizer" onClick={() => setVisualizerOpen(!visualizerOpen)}>
+              <Button
+                className="square"
+                appearance="subtle"
+                title="Toggle Visualizer"
+                onClick={() => {
+                  if (lyricsOpen) {
+                    setLyricsOpen(false);
+                  }
+                  setVisualizerOpen(!visualizerOpen);
+                }}
+              >
                 <Icon icon={"music_video"} noSpace />
+              </Button>
+            )}
+            {props.state.item.HasLyrics && (
+              <Button
+                className="square"
+                appearance="subtle"
+                title="Lyrics"
+                onClick={async () => {
+                  if (!lyricsOpen) {
+                    setLoading(true);
+                    const lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
+                    fetchedLyrics.current = lyrics;
+                    setLoading(false);
+                    setLyricsOpen(true);
+                    if (visualizerOpen) {
+                      setVisualizerOpen(false);
+                    }
+                  } else {
+                    setLyricsOpen(false);
+                  }
+                }}
+              >
+                <Icon icon={"lyrics"} noSpace />
               </Button>
             )}
             <Button
