@@ -101,10 +101,6 @@ div.rs-drawer-header img {
   visibility: hidden;
 }
 
-.now-playing-buttons button:not(:last-of-type) {
-  margin-right: 9px;
-}
-
 .scrubber,
 .scrubber .bar,
 .bar__progress,
