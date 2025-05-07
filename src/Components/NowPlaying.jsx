@@ -326,16 +326,16 @@ export default function NowPlaying(props) {
                 title="Lyrics"
                 onClick={async () => {
                   if (!lyricsOpen) {
-                    setLoading(true);
                     let lyrics;
                     if (!cacheStorage.get(`lyrics-${props.state.item.Id}`)) {
+                      setLoading(true);
                       lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
                       cacheStorage.set(`lyrics-${props.state.item.Id}`, lyrics);
+                      setLoading(false);
                     } else {
                       lyrics = cacheStorage.get(`lyrics-${props.state.item.Id}`);
                     }
                     fetchedLyrics.current = lyrics;
-                    setLoading(false);
                     setLyricsOpen(true);
                     if (visualizerOpen) {
                       setVisualizerOpen(false);
