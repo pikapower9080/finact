@@ -1,17 +1,22 @@
 # Finact
 
-Finact is a modern [Jellyfin](https://jellyfin.org/) client written in React made for listening to music on desktop and the web. Finact focuses on aesthetics and ease of use.
+> [!WARNING]
+> Finact is still a **work in progress** and currently is nowhere near being feature-complete or stable. There is also no desktop app at the moment.
+
+Finact is a modern [Jellyfin](https://jellyfin.org/) client written in React made for listening to music on desktop and the web. Finact focuses on aesthetics and unique features.
 
 ## Feature Comparison
 
-|                             | Finact          | Jellyfin Web    | Feishin         |
-| --------------------------- | --------------- | --------------- | --------------- |
-| Basic Music Features        | ✅              | ✅              | ✅              |
-| Playback Reporting          | ➖              | ✅              | ✅              |
-| Collections                 | ✅              | ✅              | ❌              |
-| Media Keys & OS Integration | ✅              | ➖ <sup>1</sup> | ➖ <sup>2</sup> |
-| Lyrics                      | ❌              | ✅              | ✅              |
-| Music Visualizer            | ✅ <sup>3</sup> | ❌              | ❌              |
+|                             | Finact          | Jellyfin Web    | [Feishin](https://github.com/jeffvli/feishin) |
+| --------------------------- | --------------- | --------------- | --------------------------------------------- |
+| Basic Music Features        | ✅              | ✅              | ✅                                            |
+| Playback Reporting          | ✅              | ✅              | ✅                                            |
+| Playlists                   | ✅              | ✅              | ✅                                            |
+| Playlist Editing            | ❌              | ✅              | ✅                                            |
+| Collections                 | ✅              | ✅              | ❌                                            |
+| Media Keys & OS Integration | ✅              | ➖ <sup>1</sup> | ➖ <sup>2</sup>                               |
+| Lyrics                      | ✅              | ✅              | ✅                                            |
+| Music Visualizer            | ✅ <sup>3</sup> | ❌              | ❌                                            |
 
 1. Not supported on Linux, no album art
 2. Poor support for MacOS
