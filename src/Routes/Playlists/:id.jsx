@@ -26,7 +26,7 @@ export default function Playlist() {
     };
 
     fetchPlaylistData();
-  }, []);
+  }, [id]);
 
   const handleSortEnd = ({ oldIndex, newIndex }) =>
     setData((prvData) => {

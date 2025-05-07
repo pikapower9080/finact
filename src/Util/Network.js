@@ -28,6 +28,9 @@ export async function jellyfinRequest(url, options = {}, format = "json") {
   } else {
     console.log(options);
     const response = await fetch(`${serverURL}${url}`, options);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     return await response[format]();
   }
 }

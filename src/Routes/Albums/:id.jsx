@@ -48,7 +48,7 @@ export default function Album() {
     };
 
     fetchPlaylistData();
-  }, []);
+  }, [id]);
 
   return (
     <>

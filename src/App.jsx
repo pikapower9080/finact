@@ -14,6 +14,7 @@ import NotFound from "./Routes/NotFound";
 import Playlist from "./Routes/Playlists/:id";
 import Album from "./Routes/Albums/:id";
 import Search from "./Routes/Search";
+import AddToPlaylist from "./Components/AddToPlaylist";
 
 const storage = getStorage();
 
@@ -34,6 +35,7 @@ function App() {
   const [user, setUser] = useState(getUser);
   const [playbackState, setPlaybackState] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [addToPlaylistItem, setAddToPlaylistItem] = useState(null);
 
   const toaster = useToaster();
 
@@ -41,7 +43,7 @@ function App() {
     window.playbackState = playbackState;
   }, [playbackState]);
 
-  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster };
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem };
 
   return (
     <>
@@ -53,6 +55,7 @@ function App() {
               <SignIn setUser={setUser} />
             ) : (
               <>
+                <AddToPlaylist item={addToPlaylistItem} />
                 <HashRouter>
                   <Routes>
                     <Route path="/" element={<Home />} />

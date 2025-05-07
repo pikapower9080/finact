@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { List, HStack, VStack, Text, Button, Avatar } from "rsuite";
 import { GlobalState } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
@@ -7,6 +7,7 @@ import ItemContextMenu from "./ItemContextMenu";
 
 export function ItemListEntry({ item, index, type, allItems }) {
   const { playbackState, setPlaybackState } = useContext(GlobalState);
+  const moreButtonRef = useRef();
 
   return (
     <List.Item
