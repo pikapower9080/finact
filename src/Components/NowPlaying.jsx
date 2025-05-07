@@ -12,6 +12,9 @@ import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
+import { getCacheStorage } from "../storage";
+
+const cacheStorage = getCacheStorage();
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
@@ -324,7 +327,13 @@ export default function NowPlaying(props) {
                 onClick={async () => {
                   if (!lyricsOpen) {
                     setLoading(true);
-                    const lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
+                    let lyrics;
+                    if (!cacheStorage.get(`lyrics-${props.state.item.Id}`)) {
+                      lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
+                      cacheStorage.set(`lyrics-${props.state.item.Id}`, lyrics);
+                    } else {
+                      lyrics = cacheStorage.get(`lyrics-${props.state.item.Id}`);
+                    }
                     fetchedLyrics.current = lyrics;
                     setLoading(false);
                     setLyricsOpen(true);
