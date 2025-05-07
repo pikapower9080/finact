@@ -31,10 +31,10 @@ export function ItemListEntry({ item, index, type, allItems }) {
       <HStack spacing={15} alignItems="center">
         {type == "album" && item.IndexNumber && <Text muted>{item.IndexNumber}</Text>}
         {type != "album" && <Avatar src={getAlbumArt(item, 160)} />}
-        <VStack>
+        <VStack spacing={0}>
           <Text>{item.Name}</Text>
           {type == "album"
-            ? item.Artists && <Text muted>{item.Artists.join(" / ")}</Text>
+            ? item.Artists && item.Artists.length > 0 && <Text muted>{item.Artists.join(" / ")}</Text>
             : item.Album && (
                 <Text as="a" href={`/#albums/${item.AlbumId}`} muted onClick={(e) => e.stopPropagation()}>
                   {item.Album}
