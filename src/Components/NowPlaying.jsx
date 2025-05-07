@@ -319,23 +319,13 @@ export default function NowPlaying(props) {
                 <Icon icon={"music_video"} noSpace />
               </Button>
             )}
-            {props.state.item.HasLyrics && (
+            {(props.state.item.HasLyrics || lyricsOpen) && (
               <Button
                 className="square"
                 appearance="subtle"
                 title="Lyrics"
                 onClick={async () => {
                   if (!lyricsOpen) {
-                    let lyrics;
-                    if (!cacheStorage.get(`lyrics-${props.state.item.Id}`)) {
-                      setLoading(true);
-                      lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
-                      cacheStorage.set(`lyrics-${props.state.item.Id}`, lyrics);
-                      setLoading(false);
-                    } else {
-                      lyrics = cacheStorage.get(`lyrics-${props.state.item.Id}`);
-                    }
-                    fetchedLyrics.current = lyrics;
                     setLyricsOpen(true);
                     if (visualizerOpen) {
                       setVisualizerOpen(false);
