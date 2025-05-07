@@ -305,6 +305,9 @@ export default function NowPlaying(props) {
           </FlexboxGrid.Item>
           <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
             <HStack spacing={9}>
+              <Text muted className="no-select">
+                {formatTimestamp(position / 1000)} / {formatTimestamp(props.state.item.RunTimeTicks / 1e7)}
+              </Text>
               {visualizerSupported.current && (
                 <Button
                   className="square"
