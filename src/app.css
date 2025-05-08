@@ -1,3 +1,8 @@
+:root {
+  --heading-font: "Inter", Helvetica, sans-serif;
+  --body-font: "Roboto", "Inter", Helvetica, sans-serif;
+}
+
 :root:has(body.rs-theme-dark) {
   color-scheme: dark;
 }
@@ -144,4 +149,18 @@ div.rs-drawer-header img {
 
 .footer-overlay nav {
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+*,
+.rs-text {
+  font-family: var(--body-font);
+}
+
+.rs-heading,
+.rs-stat-value {
+  font-family: var(--heading-font);
+}
+
+.rs-stat-label {
+  font-weight: 300;
 }
