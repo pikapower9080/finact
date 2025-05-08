@@ -8,7 +8,7 @@ import { GlobalState } from "../App";
 
 const storage = getStorage();
 
-const searchedItemTypes = ["MusicAlbum", "Audio", "Playlist"];
+const searchedItemTypes = ["MusicAlbum", "Playlist", "Audio"];
 const itemTypeDisplayNames = { MusicAlbum: "Albums", Audio: "Tracks", Playlist: "Playlists" };
 
 async function searchInstance(searchQuery) {
@@ -35,6 +35,12 @@ async function searchInstance(searchQuery) {
     if (category) {
       category.Items.push(item);
     }
+  });
+
+  categories.sort((a, b) => {
+    const indexA = searchedItemTypes.indexOf(a.Type);
+    const indexB = searchedItemTypes.indexOf(b.Type);
+    return indexA - indexB;
   });
 
   console.log(searchResults, categories);
@@ -76,7 +82,9 @@ export default function Search() {
             }
             return (
               <Fragment key={index}>
-                <Heading level={4}>{itemTypeDisplayNames[category.Type] || "Unknown"}</Heading>
+                <Heading level={4} style={{ marginBlock: 10 }}>
+                  {itemTypeDisplayNames[category.Type] || "Unknown"}
+                </Heading>
                 <Grid fluid>
                   <Row gutter={16}>
                     {category.Items.map((item) => {
