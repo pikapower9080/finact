@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, Fragment } from "react";
 import { useParams } from "react-router";
 import { Heading, List, HStack, Stat, Image } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
-import { getUser, LoadingContext } from "../../App";
+import { getUser, GlobalState } from "../../App";
 import { formatSeconds } from "../../Util/Formatting";
 import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
@@ -36,19 +36,18 @@ export default function Album() {
   const { id } = useParams();
 
   const [data, setData] = useState(null);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading } = useContext(GlobalState);
 
   useEffect(() => {
     setLoading(true);
     const fetchPlaylistData = async () => {
       const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete&SortBy=IndexNumber`)]);
-      console.log(responses);
       setData({ data: responses[0], discs: getDiscGroups(responses[1].Items) });
       setLoading(false);
     };
 
     fetchPlaylistData();
-  }, []);
+  }, [id]);
 
   return (
     <>

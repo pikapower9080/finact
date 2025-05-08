@@ -1,12 +1,13 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { List, HStack, VStack, Text, Button, Avatar } from "rsuite";
-import { PlaybackContext } from "../App";
+import { GlobalState } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
 
 export function ItemListEntry({ item, index, type, allItems }) {
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
+  const moreButtonRef = useRef();
 
   return (
     <List.Item
@@ -23,7 +24,6 @@ export function ItemListEntry({ item, index, type, allItems }) {
         if (allItems) {
           const itemIndex = allItems.findIndex((i) => i.Id === item.Id);
           newState.queue = { items: allItems, index: itemIndex };
-          console.log(newState.queue);
         }
         setPlaybackState(newState);
       }}
@@ -31,10 +31,10 @@ export function ItemListEntry({ item, index, type, allItems }) {
       <HStack spacing={15} alignItems="center">
         {type == "album" && item.IndexNumber && <Text muted>{item.IndexNumber}</Text>}
         {type != "album" && <Avatar src={getAlbumArt(item, 160)} />}
-        <VStack>
+        <VStack spacing={0}>
           <Text>{item.Name}</Text>
           {type == "album"
-            ? item.Artists && <Text muted>{item.Artists.join(" / ")}</Text>
+            ? item.Artists && item.Artists.length > 0 && <Text muted>{item.Artists.join(" / ")}</Text>
             : item.Album && (
                 <Text as="a" href={`/#albums/${item.AlbumId}`} muted onClick={(e) => e.stopPropagation()}>
                   {item.Album}

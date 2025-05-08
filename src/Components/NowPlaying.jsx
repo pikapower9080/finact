@@ -1,8 +1,8 @@
 import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
-import { getUser, LoadingContext, PlaybackContext } from "../App";
-import { getAlbumArt } from "../Util/Formatting";
+import { getUser, GlobalState } from "../App";
+import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
@@ -12,15 +12,18 @@ import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
+import { getCacheStorage } from "../storage";
+
+const cacheStorage = getCacheStorage();
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
-  const { playbackState, setPlaybackState } = useContext(PlaybackContext);
+  const { playbackState, setPlaybackState } = useContext(GlobalState);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
-  const { setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(GlobalState);
 
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);
@@ -83,7 +86,6 @@ export default function NowPlaying(props) {
       mediaSession.setActionHandler("nexttrack", next);
 
       mediaSession.setActionHandler("seekto", (details) => {
-        console.log(details);
         const newTime = details.fastSeek ? details.fastSeek : details.seekTime;
         setPlaybackState((prevState) => ({
           ...prevState,
@@ -178,7 +180,6 @@ export default function NowPlaying(props) {
 
   function next() {
     if ("queue" in playbackState) {
-      console.log(playbackState.queue.index, playbackState.queue.items.length - 1);
       if (playbackState.queue.index == playbackState.queue.items.length - 1) {
         // end playback on the last song
         setPlaybackState(null);
@@ -301,71 +302,72 @@ export default function NowPlaying(props) {
             </ButtonGroup>
           </FlexboxGrid.Item>
           <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
-            {visualizerSupported.current && (
-              <Button
-                className="square"
-                appearance="subtle"
-                title="Toggle Visualizer"
-                onClick={() => {
-                  if (lyricsOpen) {
-                    setLyricsOpen(false);
-                  }
-                  setVisualizerOpen(!visualizerOpen);
-                }}
-              >
-                <Icon icon={"music_video"} noSpace />
-              </Button>
-            )}
-            {props.state.item.HasLyrics && (
-              <Button
-                className="square"
-                appearance="subtle"
-                title="Lyrics"
-                onClick={async () => {
-                  if (!lyricsOpen) {
-                    setLoading(true);
-                    const lyrics = await jellyfinRequest(`/Audio/${props.state.item.Id}/Lyrics`);
-                    fetchedLyrics.current = lyrics;
-                    setLoading(false);
-                    setLyricsOpen(true);
-                    if (visualizerOpen) {
-                      setVisualizerOpen(false);
+            <HStack spacing={9}>
+              <Text muted className="no-select">
+                {formatTimestamp(position / 1000)} / {formatTimestamp(props.state.item.RunTimeTicks / 1e7)}
+              </Text>
+              {visualizerSupported.current && (
+                <Button
+                  className="square"
+                  appearance="subtle"
+                  title="Toggle Visualizer"
+                  onClick={() => {
+                    if (lyricsOpen) {
+                      setLyricsOpen(false);
                     }
-                  } else {
-                    setLyricsOpen(false);
-                  }
-                }}
-              >
-                <Icon icon={"lyrics"} noSpace />
-              </Button>
-            )}
-            <Button
-              className="square"
-              appearance="subtle"
-              title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
-              onClick={() => {
-                setPlaybackState((prevState) => ({
-                  ...prevState,
-                  item: {
-                    ...prevState.item,
-                    UserData: {
-                      ...prevState.item.UserData,
-                      IsFavorite: !prevState.item.UserData.IsFavorite
-                    }
-                  }
-                }));
-              }}
-            >
-              <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
-            </Button>
-            <ItemContextMenu
-              item={props.state.item}
-              menuButton={
-                <Button appearance="subtle" className="square">
-                  <Icon icon="more_vert" noSpace />
+                    setVisualizerOpen(!visualizerOpen);
+                  }}
+                >
+                  <Icon icon={"music_video"} noSpace />
                 </Button>
-              }
-            />
+              )}
+              {(props.state.item.HasLyrics || lyricsOpen) && (
+                <Button
+                  className="square"
+                  appearance="subtle"
+                  title="Lyrics"
+                  onClick={async () => {
+                    if (!lyricsOpen) {
+                      setLyricsOpen(true);
+                      if (visualizerOpen) {
+                        setVisualizerOpen(false);
+                      }
+                    } else {
+                      setLyricsOpen(false);
+                    }
+                  }}
+                >
+                  <Icon icon={"lyrics"} noSpace />
+                </Button>
+              )}
+              <Button
+                className="square"
+                appearance="subtle"
+                title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
+                onClick={() => {
+                  setPlaybackState((prevState) => ({
+                    ...prevState,
+                    item: {
+                      ...prevState.item,
+                      UserData: {
+                        ...prevState.item.UserData,
+                        IsFavorite: !prevState.item.UserData.IsFavorite
+                      }
+                    }
+                  }));
+                }}
+              >
+                <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
+              </Button>
+              <ItemContextMenu
+                item={props.state.item}
+                menuButton={
+                  <Button appearance="subtle" className="square">
+                    <Icon icon="more_vert" noSpace />
+                  </Button>
+                }
+              />
+            </HStack>
           </FlexboxGrid.Item>
         </FlexboxGrid>
       </Navbar>

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { LoadingContext } from "../App";
+import { GlobalState } from "../App";
 
 const canvasStyle = {
   position: "fixed",
@@ -8,7 +8,7 @@ const canvasStyle = {
 };
 
 export default function Visualizer(props) {
-  const { setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(GlobalState);
 
   const canvasRef = useRef(null);
   const presetIndex = useRef(0);

@@ -26,8 +26,10 @@ export async function jellyfinRequest(url, options = {}, format = "json") {
   if (format === "json") {
     return fetchJSON(`${serverURL}${url}`, options);
   } else {
-    console.log(options);
     const response = await fetch(`${serverURL}${url}`, options);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     return await response[format]();
   }
 }
@@ -41,7 +43,6 @@ export async function getLibrary(type) {
     throw new Error("Missing or invalid user");
   }
   const libraries = await jellyfinRequest("/UserViews?userId=" + storage.get("User").Id);
-  console.log(libraries);
   const library = libraries.Items.filter((library) => library.CollectionType && library.CollectionType == type)[0];
   cacheStorage.set(`library-${type}`, library);
   return library;

@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { Container, Content, Loader } from "rsuite";
+import { Container, Content, Loader, useToaster } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import { SignIn } from "./Components/SignIn";
 import { getStorage } from "./storage";
@@ -14,6 +14,7 @@ import NotFound from "./Routes/NotFound";
 import Playlist from "./Routes/Playlists/:id";
 import Album from "./Routes/Albums/:id";
 import Search from "./Routes/Search";
+import AddToPlaylist from "./Components/AddToPlaylist";
 
 const storage = getStorage();
 
@@ -28,49 +29,52 @@ export function getUser() {
   }
 }
 
-export const PlaybackContext = createContext();
-export const LoadingContext = createContext();
+export const GlobalState = createContext();
 
 function App() {
   const [user, setUser] = useState(getUser);
   const [playbackState, setPlaybackState] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [addToPlaylistItem, setAddToPlaylistItem] = useState(null);
+
+  const toaster = useToaster();
 
   useEffect(() => {
     window.playbackState = playbackState;
   }, [playbackState]);
 
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem };
+
   return (
     <>
-      <LoadingContext.Provider value={{ loading, setLoading }}>
-        <PlaybackContext.Provider value={{ playbackState, setPlaybackState }}>
-          <Container style={{ height: "100%" }}>
-            <MainHeader user={user} />
-            <Content>
-              {!user ? (
-                <SignIn setUser={setUser} />
-              ) : (
-                <>
-                  <HashRouter>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/playlists" element={<Playlists />} />
-                      <Route path="/playlists/:id" element={<Playlist />} />
-                      <Route path="/collections" element={<Collections />} />
-                      <Route path="/collections/:id" element={<Collection />} />
-                      <Route path="/search" element={<Search />} />
-                      <Route path="/albums/:id" element={<Album />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </HashRouter>
-                </>
-              )}
-            </Content>
-            {playbackState && <NowPlaying state={playbackState} />}
-            {loading && <Loader backdrop vertical size="lg" />}
-          </Container>
-        </PlaybackContext.Provider>
-      </LoadingContext.Provider>
+      <GlobalState.Provider value={globalState}>
+        <Container style={{ height: "100%" }}>
+          <MainHeader user={user} />
+          <Content>
+            {!user ? (
+              <SignIn setUser={setUser} />
+            ) : (
+              <>
+                <AddToPlaylist item={addToPlaylistItem} />
+                <HashRouter>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/playlists" element={<Playlists />} />
+                    <Route path="/playlists/:id" element={<Playlist />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/collections/:id" element={<Collection />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/albums/:id" element={<Album />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </HashRouter>
+              </>
+            )}
+          </Content>
+          {playbackState && <NowPlaying state={playbackState} />}
+          {loading && <Loader backdrop vertical size="lg" />}
+        </Container>
+      </GlobalState.Provider>
     </>
   );
 }

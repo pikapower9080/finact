@@ -2,14 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Heading, Grid, Row } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
-import { getUser, LoadingContext } from "../../App";
+import { getUser, GlobalState } from "../../App";
 import ItemTile from "../../Components/ItemTile";
 
 export default function Collection() {
   const { id } = useParams();
 
   const [items, setItems] = useState(null);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading } = useContext(GlobalState);
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +20,7 @@ export default function Collection() {
     };
 
     fetchCollectionItems();
-  }, []);
+  }, [id]);
 
   return (
     <>

@@ -1,14 +1,14 @@
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getStorage } from "../storage";
-import { getUser, LoadingContext } from "../App";
+import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
 import { useContext } from "react";
 
 const storage = getStorage();
 
 export default function ItemContextMenu({ item, menuButton }) {
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { loading, setLoading, setAddToPlaylistItem } = useContext(GlobalState);
   const user = getUser();
 
   return (
@@ -16,6 +16,10 @@ export default function ItemContextMenu({ item, menuButton }) {
       <MenuItem href={"/#albums/" + item.AlbumId}>
         <Icon icon="album" />
         Go to Album
+      </MenuItem>
+      <MenuItem onClick={() => setAddToPlaylistItem(item)}>
+        <Icon icon="playlist_add" />
+        Add to Playlist
       </MenuItem>
       <MenuDivider />
       <MenuItem
