@@ -39,7 +39,7 @@ export default function ItemTile(props) {
     <Col key={props.item.Id} {...getColSize()} style={{ marginBottom: 5 }} {...props.tileProps}>
       <div style={squareStyle}>
         <div style={contentStyle}>
-          {props.item.ImageBlurHashes && props.item.ImageBlurHashes.length > 0 && <Blurhash hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />}
+          {typeof props.item.ImageBlurHashes == "object" && "ImageBlurHashes" in props.item && "Primary" in props.item.ImageBlurHashes && <Blurhash hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />}
           <Image
             style={{ visibility: "hidden", position: "absolute", backgroundColor: "var(--rs-body)" }}
             onLoad={(e) => {
