@@ -39,11 +39,11 @@ function App() {
 
   const toaster = useToaster();
 
-  useEffect(() => {
-    window.playbackState = playbackState;
-  }, [playbackState]);
-
   const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem };
+
+  useEffect(() => {
+    window.debug = globalState;
+  }, [...Object.values(globalState)]);
 
   return (
     <>

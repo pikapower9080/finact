@@ -30,6 +30,6 @@
   "start_url": "/",
   "display": "minimal-ui",
   "background_color": "#0f131a",
-  "theme_color": "#2196f3",
+  "theme_color": "#191D24",
   "description": "React client for Jellyfin"
 }

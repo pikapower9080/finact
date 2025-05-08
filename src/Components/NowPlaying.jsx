@@ -2,7 +2,7 @@ import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text,
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getUser, GlobalState } from "../App";
-import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
+import { formatTimestamp, getAlbumArt, getPWADisplayMode } from "../Util/Formatting";
 import Icon from "../Components/Icon";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
@@ -94,7 +94,11 @@ export default function NowPlaying(props) {
         setPosition(newTime * 1000);
       });
 
-      document.title = `${props.state.item.Name} - ${getArtistDisplay(props.state.item.Artists)} - Finact`;
+      if (getPWADisplayMode() == "browser") {
+        document.title = `${props.state.item.Name} - ${getArtistDisplay(props.state.item.Artists)} - Finact`;
+      } else {
+        document.title = "Finact";
+      }
     }
   }, [props.state]);
 
