@@ -8,32 +8,37 @@ import { GlobalState } from "../App";
 
 const storage = getStorage();
 
-const searchedItemTypes = ["MusicAlbum", "Audio"];
-const itemTypeDisplayNames = { MusicAlbum: "Albums", Audio: "Tracks" };
+const searchedItemTypes = ["MusicAlbum", "Audio", "Playlist"];
+const itemTypeDisplayNames = { MusicAlbum: "Albums", Audio: "Tracks", Playlist: "Playlists" };
 
 async function searchInstance(searchQuery) {
-  const requests = [];
+  const query = {
+    userId: storage.get("User").Id,
+    limit: 100,
+    recursive: true,
+    searchTerm: searchQuery ?? "",
+    includeItemTypes: searchedItemTypes.join(",")
+  };
 
-  for (let searchedItemType in searchedItemTypes) {
-    const query = {
-      userId: storage.get("User").Id,
-      limit: 100,
-      recursive: true,
-      searchTerm: searchQuery ?? "",
-      includeItemTypes: searchedItemType
-    };
+  const params = new URLSearchParams();
+  for (const key in query) params.set(key, query[key]);
 
-    const params = new URLSearchParams();
-    for (const key in query) params.set(key, query[key]);
+  const searchResults = await jellyfinRequest(`/Items?${params.toString()}`);
 
-    const request = jellyfinRequest(`/Items?${params.toString()}`);
+  const categories = [];
+  searchResults.Items.forEach((item) => {
+    const type = item.Type;
+    if (!categories.some((category) => category.Type === type)) {
+      categories.push({ Type: type, Items: [] });
+    }
+    const category = categories.find((category) => category.Type === type);
+    if (category) {
+      category.Items.push(item);
+    }
+  });
 
-    requests.push(request);
-  }
-
-  const searchResults = await Promise.all(requests);
-  console.log(searchResults);
-  return searchResults;
+  console.log(searchResults, categories);
+  return categories;
 }
 
 export default function Search() {
@@ -71,7 +76,7 @@ export default function Search() {
             }
             return (
               <Fragment key={index}>
-                <Heading level={3}>{itemTypeDisplayNames[category.Items[0].Type] || "Unknown"}</Heading>
+                <Heading level={4}>{itemTypeDisplayNames[category.Type] || "Unknown"}</Heading>
                 <Grid fluid>
                   <Row gutter={16}>
                     {category.Items.map((item) => {
@@ -93,6 +98,12 @@ export default function Search() {
                                     index: category.Items.findIndex((x) => x.Id == item.Id)
                                   }
                                 });
+                              } else if (item.Type == "MusicAlbum") {
+                                window.location.href = `/#albums/${item.Id}`;
+                              } else if (item.Type == "Playlist") {
+                                window.location.href = `/#playlists/${item.Id}`;
+                              } else {
+                                console.warn("Unknown item type", item);
                               }
                             }
                           }}
