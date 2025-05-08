@@ -68,7 +68,7 @@ export default function Search() {
         }}
       >
         <InputGroup>
-          <Input value={searchQuery} onChange={setSearchQuery} />
+          <Input autoFocus value={searchQuery} onChange={setSearchQuery} />
           <InputGroup.Button type="submit" loading={searching} disabled={searching}>
             <Icon icon="search" noSpace />
           </InputGroup.Button>
