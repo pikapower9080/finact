@@ -86,7 +86,6 @@ export default function NowPlaying(props) {
       mediaSession.setActionHandler("nexttrack", next);
 
       mediaSession.setActionHandler("seekto", (details) => {
-        console.log(details);
         const newTime = details.fastSeek ? details.fastSeek : details.seekTime;
         setPlaybackState((prevState) => ({
           ...prevState,
@@ -181,7 +180,6 @@ export default function NowPlaying(props) {
 
   function next() {
     if ("queue" in playbackState) {
-      console.log(playbackState.queue.index, playbackState.queue.items.length - 1);
       if (playbackState.queue.index == playbackState.queue.items.length - 1) {
         // end playback on the last song
         setPlaybackState(null);

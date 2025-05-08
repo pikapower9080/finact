@@ -24,7 +24,6 @@ export function ItemListEntry({ item, index, type, allItems }) {
         if (allItems) {
           const itemIndex = allItems.findIndex((i) => i.Id === item.Id);
           newState.queue = { items: allItems, index: itemIndex };
-          console.log(newState.queue);
         }
         setPlaybackState(newState);
       }}

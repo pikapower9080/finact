@@ -31,12 +31,11 @@ export function SignIn(props) {
               if (serverURL.endsWith("/")) {
                 serverURL = serverURL.slice(0, -1);
               }
-              console.log(serverURL);
+              console.log("Using server URL: " + serverURL);
               storage.set("serverURL", serverURL);
               setLoading(true);
               try {
                 const info = await jellyfinRequest("/System/Info/Public");
-                console.log(info);
                 setLoading(false);
                 if (info && info.ProductName == "Jellyfin Server") {
                   if (info.SetupWizardCompleted == false) {
@@ -79,7 +78,6 @@ export function SignIn(props) {
       <>
         <Form
           onSubmit={async (e) => {
-            console.log(e);
             setLoading(true);
             try {
               const authResult = await jellyfinRequest("/Users/AuthenticateByName", {
@@ -92,7 +90,6 @@ export function SignIn(props) {
                   "Content-Type": "application/json"
                 }
               });
-              console.log(authResult);
               storage.set("AccessToken", authResult.AccessToken);
               storage.set("User", authResult.User);
               setLoading(false);

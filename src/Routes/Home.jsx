@@ -10,20 +10,6 @@ export default function Home() {
   return (
     <>
       <Heading level={3}>Home</Heading>
-
-      <Button
-        onClick={async () => {
-          const songData = await jellyfinRequest("/Items/fce1da10f97804a8fb589323d17518db");
-          console.log(songData);
-          setPlaybackState({
-            item: songData,
-            playing: true,
-            position: 0
-          });
-        }}
-      >
-        Play some funky music 🎺
-      </Button>
       <RecentlyAdded />
       <FrequentlyPlayed />
     </>

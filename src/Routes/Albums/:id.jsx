@@ -42,7 +42,6 @@ export default function Album() {
     setLoading(true);
     const fetchPlaylistData = async () => {
       const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete&SortBy=IndexNumber`)]);
-      console.log(responses);
       setData({ data: responses[0], discs: getDiscGroups(responses[1].Items) });
       setLoading(false);
     };
