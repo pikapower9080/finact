@@ -33,9 +33,6 @@ i.material-icons.no-space {
 }
 
 .now-playing {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   padding: 5px 10px;
 }
 
@@ -124,6 +121,7 @@ div.rs-drawer-header img {
   height: 100vh;
   background-color: var(--rs-body);
   padding: 20px;
+  padding-block: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -132,4 +130,18 @@ div.rs-drawer-header img {
   width: 98%;
   font-size: 30px;
   margin-bottom: 15px;
+}
+.lyrics p:first-child {
+  margin-top: 15px;
+}
+.lyrics p:last-child {
+  margin-bottom: 60px;
+}
+
+.rs-footer {
+  z-index: 2;
+}
+
+.footer-overlay nav {
+  background-color: rgba(0, 0, 0, 0.8);
 }

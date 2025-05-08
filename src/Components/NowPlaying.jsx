@@ -1,4 +1,4 @@
-import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text } from "rsuite";
+import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text, Footer } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getUser, GlobalState } from "../App";
@@ -236,141 +236,143 @@ export default function NowPlaying(props) {
       />
       {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
       {lyricsOpen && <Lyrics lyrics={fetchedLyrics.current} state={props.state} position={position} />}
-      <Navbar className="now-playing" style={{ flexBasis: 0 }}>
-        <Scrubber
-          min={0}
-          max={props.state.item.RunTimeTicks / 10000}
-          value={position}
-          tooltip={{
-            enabledOnHover: true,
-            enabledOnScrub: true,
-            formatString: (e) => {
-              const minutes = Math.floor(e / 1000 / 60);
-              const seconds = Math.floor((e / 1000) % 60);
-              const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-              const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-              return `${formattedMinutes}:${formattedSeconds}`;
-            }
-          }}
-          onScrubEnd={(e) => {
-            handleTimeUpdate(e);
-            isScrubbing.current = false;
-          }}
-          onScrubStart={(e) => {
-            // handleTimeUpdate(e);
-            setPosition(e);
-            isScrubbing.current = true;
-          }}
-          onScrubChange={setPosition}
-        />
-        <FlexboxGrid justify="space-around" align="middle">
-          <FlexboxGrid.Item style={{ flex: 1 }}>
-            <HStack spacing={10}>
-              <Avatar size="sm" src={getAlbumArt(props.state.item)} />
-              <div>
-                <VStack spacing={0}>
-                  <Text weight="bold" className="no-select">
-                    {props.state.item.Name}
-                  </Text>
-                  <Text muted className="no-select">
-                    {getArtistDisplay(props.state.item.Artists)}
-                  </Text>
-                </VStack>
-              </div>
-            </HStack>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <ButtonGroup>
-              <Button appearance="subtle" onClick={previous}>
-                <Icon icon={"skip_previous"} noSpace />
-              </Button>
-              <Button
-                appearance="subtle"
-                onClick={() => {
-                  if (playbackState.playing) {
-                    pause();
-                  } else {
-                    play();
-                  }
-                }}
-              >
-                <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
-              </Button>
-              <Button appearance="subtle" onClick={next}>
-                <Icon icon={"skip_next"} noSpace />
-              </Button>
-            </ButtonGroup>
-          </FlexboxGrid.Item>
-          <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
-            <HStack spacing={9}>
-              <Text muted className="no-select">
-                {formatTimestamp(position / 1000)} / {formatTimestamp(props.state.item.RunTimeTicks / 1e7)}
-              </Text>
-              {visualizerSupported.current && (
+      <Footer className={(lyricsOpen || visualizerOpen) && "footer-overlay"}>
+        <Navbar className="now-playing" style={{ flexBasis: 0 }}>
+          <Scrubber
+            min={0}
+            max={props.state.item.RunTimeTicks / 10000}
+            value={position}
+            tooltip={{
+              enabledOnHover: true,
+              enabledOnScrub: true,
+              formatString: (e) => {
+                const minutes = Math.floor(e / 1000 / 60);
+                const seconds = Math.floor((e / 1000) % 60);
+                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+                return `${formattedMinutes}:${formattedSeconds}`;
+              }
+            }}
+            onScrubEnd={(e) => {
+              handleTimeUpdate(e);
+              isScrubbing.current = false;
+            }}
+            onScrubStart={(e) => {
+              // handleTimeUpdate(e);
+              setPosition(e);
+              isScrubbing.current = true;
+            }}
+            onScrubChange={setPosition}
+          />
+          <FlexboxGrid justify="space-around" align="middle">
+            <FlexboxGrid.Item style={{ flex: 1 }}>
+              <HStack spacing={10}>
+                <Avatar size="sm" src={getAlbumArt(props.state.item)} />
+                <div>
+                  <VStack spacing={0}>
+                    <Text weight="bold" className="no-select">
+                      {props.state.item.Name}
+                    </Text>
+                    <Text muted className="no-select">
+                      {getArtistDisplay(props.state.item.Artists)}
+                    </Text>
+                  </VStack>
+                </div>
+              </HStack>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+              <ButtonGroup>
+                <Button appearance="subtle" onClick={previous}>
+                  <Icon icon={"skip_previous"} noSpace />
+                </Button>
                 <Button
-                  className="square"
                   appearance="subtle"
-                  title="Toggle Visualizer"
                   onClick={() => {
-                    if (lyricsOpen) {
-                      setLyricsOpen(false);
+                    if (playbackState.playing) {
+                      pause();
+                    } else {
+                      play();
                     }
-                    setVisualizerOpen(!visualizerOpen);
                   }}
                 >
-                  <Icon icon={"music_video"} noSpace />
+                  <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
                 </Button>
-              )}
-              {(props.state.item.HasLyrics || lyricsOpen) && (
+                <Button appearance="subtle" onClick={next}>
+                  <Icon icon={"skip_next"} noSpace />
+                </Button>
+              </ButtonGroup>
+            </FlexboxGrid.Item>
+            <FlexboxGrid.Item style={{ flex: 1, display: "flex", justifyContent: "flex-end" }} className="now-playing-buttons">
+              <HStack spacing={9}>
+                <Text muted className="no-select">
+                  {formatTimestamp(position / 1000)} / {formatTimestamp(props.state.item.RunTimeTicks / 1e7)}
+                </Text>
+                {visualizerSupported.current && (
+                  <Button
+                    className="square"
+                    appearance="subtle"
+                    title="Toggle Visualizer"
+                    onClick={() => {
+                      if (lyricsOpen) {
+                        setLyricsOpen(false);
+                      }
+                      setVisualizerOpen(!visualizerOpen);
+                    }}
+                  >
+                    <Icon icon={"music_video"} noSpace />
+                  </Button>
+                )}
+                {(props.state.item.HasLyrics || lyricsOpen) && (
+                  <Button
+                    className="square"
+                    appearance="subtle"
+                    title="Lyrics"
+                    onClick={async () => {
+                      if (!lyricsOpen) {
+                        setLyricsOpen(true);
+                        if (visualizerOpen) {
+                          setVisualizerOpen(false);
+                        }
+                      } else {
+                        setLyricsOpen(false);
+                      }
+                    }}
+                  >
+                    <Icon icon={"lyrics"} noSpace />
+                  </Button>
+                )}
                 <Button
                   className="square"
                   appearance="subtle"
-                  title="Lyrics"
-                  onClick={async () => {
-                    if (!lyricsOpen) {
-                      setLyricsOpen(true);
-                      if (visualizerOpen) {
-                        setVisualizerOpen(false);
+                  title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
+                  onClick={() => {
+                    setPlaybackState((prevState) => ({
+                      ...prevState,
+                      item: {
+                        ...prevState.item,
+                        UserData: {
+                          ...prevState.item.UserData,
+                          IsFavorite: !prevState.item.UserData.IsFavorite
+                        }
                       }
-                    } else {
-                      setLyricsOpen(false);
-                    }
+                    }));
                   }}
                 >
-                  <Icon icon={"lyrics"} noSpace />
+                  <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
                 </Button>
-              )}
-              <Button
-                className="square"
-                appearance="subtle"
-                title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
-                onClick={() => {
-                  setPlaybackState((prevState) => ({
-                    ...prevState,
-                    item: {
-                      ...prevState.item,
-                      UserData: {
-                        ...prevState.item.UserData,
-                        IsFavorite: !prevState.item.UserData.IsFavorite
-                      }
-                    }
-                  }));
-                }}
-              >
-                <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
-              </Button>
-              <ItemContextMenu
-                item={props.state.item}
-                menuButton={
-                  <Button appearance="subtle" className="square">
-                    <Icon icon="more_vert" noSpace />
-                  </Button>
-                }
-              />
-            </HStack>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Navbar>
+                <ItemContextMenu
+                  item={props.state.item}
+                  menuButton={
+                    <Button appearance="subtle" className="square">
+                      <Icon icon="more_vert" noSpace />
+                    </Button>
+                  }
+                />
+              </HStack>
+            </FlexboxGrid.Item>
+          </FlexboxGrid>
+        </Navbar>
+      </Footer>
     </>
   );
 }
