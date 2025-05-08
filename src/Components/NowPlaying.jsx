@@ -93,6 +93,8 @@ export default function NowPlaying(props) {
         }));
         setPosition(newTime * 1000);
       });
+
+      document.title = `${props.state.item.Name} - ${getArtistDisplay(props.state.item.Artists)} - Finact`;
     }
   }, [props.state]);
 
