@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router";
-import { Heading, List, HStack, Avatar, Text, Stat } from "rsuite";
+import { Heading, List, HStack, Avatar, Text, Stat, FlexboxGrid } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
 import { getUser, GlobalState } from "../../App";
 import { formatSeconds } from "../../Util/Formatting";
@@ -8,7 +8,7 @@ import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";
 import ItemListActions from "../../Components/ItemListActions";
-
+HStack;
 const storage = getStorage();
 
 export default function Playlist() {
@@ -40,10 +40,13 @@ export default function Playlist() {
     <>
       {data ? (
         <>
-          <HStack>
-            <Avatar size="md" src={`${storage.get("serverURL")}/Items/${id}/Images/Primary`} />
-            <Heading level={3}>{data.data.Name}</Heading>
-          </HStack>
+          <FlexboxGrid align="middle" justify="space-between">
+            <HStack>
+              <Avatar size="md" src={`${storage.get("serverURL")}/Items/${id}/Images/Primary`} />
+              <Heading level={3}>{data.data.Name}</Heading>
+            </HStack>
+            <ItemListActions s items={data.items.Items} type="playlist" parent={data.data} />
+          </FlexboxGrid>
           <Spacer height={10} />
           {data.data.Overview && data.data.Overview.length > 0 && (
             <>
@@ -51,7 +54,6 @@ export default function Playlist() {
               <Spacer height={10} />
             </>
           )}
-          <ItemListActions items={data.items.Items} type="playlist" parent={data.data} />
           <Spacer height={10} />
           <HStack spacing={10}>
             <Stat bordered>
@@ -63,6 +65,7 @@ export default function Playlist() {
               <Stat.Label>Run Time</Stat.Label>
             </Stat>
           </HStack>
+
           <Spacer height={10} />
           <List bordered hover /*sortable onSort={handleSortEnd}*/>
             {data.items.Items.map((item, index) => (
