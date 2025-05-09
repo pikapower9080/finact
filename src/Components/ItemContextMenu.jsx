@@ -4,6 +4,7 @@ import { getStorage } from "../storage";
 import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
 import { useContext } from "react";
+import copy from "copy-to-clipboard";
 
 const storage = getStorage();
 
@@ -11,20 +12,33 @@ export default function ItemContextMenu({ item, menuButton }) {
   const { loading, setLoading, setAddToPlaylistItem } = useContext(GlobalState);
   const user = getUser();
 
-  return (
-    <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
-      <MenuItem href={"/#albums/" + item.AlbumId}>
-        <Icon icon="album" />
-        Go to Album
-      </MenuItem>
-      <MenuItem onClick={() => setAddToPlaylistItem(item)}>
-        <Icon icon="playlist_add" />
-        Add to Playlist
-      </MenuItem>
-      <MenuDivider />
-      <MenuItem
-        disabled={user.Policy.EnableContentDownloading === false}
-        onClick={async () => {
+  const menuCategories = [];
+
+  if (item.Type === "Audio") {
+    const generalCategory = [];
+    if (!window.location.hash.includes("albums")) {
+      generalCategory.push({
+        icon: "album",
+        label: "Go to Album",
+        action: () => {
+          window.location.href = "/#albums/" + item.AlbumId;
+        }
+      });
+    }
+    generalCategory.push({
+      icon: "playlist_add",
+      label: "Add to Playlist",
+      action: () => {
+        setAddToPlaylistItem(item);
+      }
+    });
+    menuCategories.push(generalCategory);
+    const advancedCategory = [];
+    if (user.Policy.EnableContentDownloading) {
+      advancedCategory.push({
+        icon: "download",
+        label: "Download",
+        action: async () => {
           setLoading(true);
           try {
             const blob = await jellyfinRequest(`/Items/${item.Id}/Download?UserId=${getUser().Id}`, {}, "blob");
@@ -39,24 +53,51 @@ export default function ItemContextMenu({ item, menuButton }) {
           } finally {
             setLoading(false);
           }
-        }}
-      >
-        <Icon icon="download" />
-        Download
-      </MenuItem>
-      <MenuItem
-        disabled={user.Policy.EnableContentDownloading === false}
-        onClick={() => {
-          navigator.clipboard.writeText(`${storage.get("serverURL")}/Items/${item.Id}/Download?api_key=${storage.get("AccessToken")}`);
-        }}
-      >
-        <Icon icon="link" />
-        Copy Stream URL
-      </MenuItem>
-      <MenuItem onClick={() => navigator.clipboard.writeText(item.Id)}>
-        <Icon icon="content_copy" />
-        Copy Item ID
-      </MenuItem>
+        }
+      });
+      advancedCategory.push({
+        icon: "link",
+        label: "Copy Stream URL",
+        action: () => {
+          copy(`${storage.get("serverURL")}/Items/${item.Id}/Download?api_key=${storage.get("AccessToken")}`);
+        }
+      });
+    }
+    advancedCategory.push({
+      icon: "content_copy",
+      label: "Copy Item ID",
+      action: () => {
+        copy(item.Id);
+      }
+    });
+    menuCategories.push(advancedCategory);
+  }
+
+  if (item.Type === "MusicAlbum") {
+    menuCategories.push([{ icon: "content_copy", label: "Copy Album ID", action: () => copy(item.Id) }]);
+  }
+  if (item.Type === "Playlist") {
+    menuCategories.push([{ icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) }]);
+  }
+
+  return (
+    <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
+      {menuCategories.map((category, index) => (
+        <div key={index}>
+          {index > 0 && <MenuDivider />}
+          {category.map((item, itemIndex) => (
+            <MenuItem
+              key={itemIndex}
+              onClick={(e) => {
+                item.action();
+              }}
+            >
+              <Icon icon={item.icon} />
+              {item.label}
+            </MenuItem>
+          ))}
+        </div>
+      ))}
     </Menu>
   );
 }

@@ -164,3 +164,18 @@ div.rs-drawer-header img {
 .rs-stat-label {
   font-weight: 300;
 }
+
+.subtle-bordered {
+  border: 1px solid var(--rs-border-primary);
+}
+.subtle-bordered:hover {
+  border: 1px solid var(--rs-state-hover-bg);
+}
+.subtle-bordered:not(:first-child) {
+  border-left: none;
+}
+
+.force-last {
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}

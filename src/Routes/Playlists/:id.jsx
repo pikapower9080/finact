@@ -7,6 +7,7 @@ import { formatSeconds } from "../../Util/Formatting";
 import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";
+import ItemListActions from "../../Components/ItemListActions";
 
 const storage = getStorage();
 
@@ -50,6 +51,8 @@ export default function Playlist() {
               <Spacer height={10} />
             </>
           )}
+          <ItemListActions items={data.items.Items} type="playlist" parent={data.data} />
+          <Spacer height={10} />
           <HStack spacing={10}>
             <Stat bordered>
               <Stat.Value value={data.data.ChildCount} />

@@ -7,6 +7,7 @@ import { formatSeconds } from "../../Util/Formatting";
 import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";
+import ItemListActions from "../../Components/ItemListActions";
 
 const storage = getStorage();
 
@@ -92,6 +93,9 @@ export default function Album() {
           )} */}
 
           <Spacer height={10} />
+          <ItemListActions items={data.discs.flat()} type="album" parent={data.data} />
+          <Spacer height={5} />
+
           {data.discs.map((discItems, index) => {
             if (!discItems || discItems.length === 0) {
               return null;

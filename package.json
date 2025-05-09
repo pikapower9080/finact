@@ -17,6 +17,7 @@
     "blurhash": "^2.0.5",
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
+    "copy-to-clipboard": "^3.3.3",
     "material-icons": "^1.13.14",
     "react": "^19.0.0",
     "react-blurhash": "^0.3.0",
