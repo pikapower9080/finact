@@ -73,6 +73,18 @@ export default function ItemContextMenu({ item, menuButton }) {
     menuCategories.push(advancedCategory);
   }
 
+  if (item.Type === "MusicAlbum" || item.Type === "Playlist") {
+    menuCategories.push([
+      {
+        icon: "playlist_add",
+        label: "Add to Playlist",
+        action: () => {
+          setAddToPlaylistItem(item);
+        }
+      }
+    ]);
+  }
+
   if (item.Type === "MusicAlbum") {
     menuCategories.push([{ icon: "content_copy", label: "Copy Album ID", action: () => copy(item.Id) }]);
   }
