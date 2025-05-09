@@ -42,7 +42,7 @@ export default function MainHeader(props) {
         <Drawer.Header>
           <Drawer.Title>
             <Image src="finact.png" style={{ height: "1em", marginRight: "5px" }} />
-            Finact
+            {Math.random() < 0.001 ? "Fincat" : "Finact"}
           </Drawer.Title>
         </Drawer.Header>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext, Fragment } from "react";
 import { useParams } from "react-router";
-import { Heading, List, HStack, Stat, Image } from "rsuite";
+import { Heading, List, HStack, Stat, Image, FlexboxGrid } from "rsuite";
 import { jellyfinRequest } from "../../Util/Network";
 import { getUser, GlobalState } from "../../App";
 import { formatSeconds } from "../../Util/Formatting";
@@ -56,10 +56,13 @@ export default function Album() {
         <>
           <HStack spacing={14} wrap>
             <Image style={{ height: "128px", borderRadius: "6px" }} src={`${storage.get("serverURL")}/Items/${id}/Images/Primary`} />
-            <HStack.Item>
-              <Heading level={3} style={{ marginLeft: 10 }}>
-                {data.data.Name}
-              </Heading>
+            <HStack.Item style={{ flexGrow: "1" }}>
+              <FlexboxGrid style={{ width: "100%" }} align="middle" justify="space-between">
+                <Heading level={3} style={{ marginLeft: 10 }}>
+                  {data.data.Name}
+                </Heading>
+                <ItemListActions items={data.discs.flat()} type="album" parent={data.data} />
+              </FlexboxGrid>
               <HStack spacing={10} wrap>
                 <Stat className="item-stat">
                   <Stat.Value value={data.data.ChildCount} />
@@ -93,8 +96,6 @@ export default function Album() {
           )} */}
 
           <Spacer height={10} />
-          <ItemListActions items={data.discs.flat()} type="album" parent={data.data} />
-          <Spacer height={5} />
 
           {data.discs.map((discItems, index) => {
             if (!discItems || discItems.length === 0) {
