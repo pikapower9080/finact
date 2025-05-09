@@ -54,7 +54,6 @@ export default function Playlist() {
               <Spacer height={10} />
             </>
           )}
-          <Spacer height={10} />
           <HStack spacing={10}>
             <Stat bordered>
               <Stat.Value value={data.data.ChildCount} />
