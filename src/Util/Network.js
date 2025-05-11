@@ -9,7 +9,7 @@ export async function fetchJSON(url, options = {}) {
   if (result.ok) {
     return json;
   } else {
-    throw new Error(json);
+    throw new Error(JSON.stringify(json) || result.statusText);
   }
 }
 

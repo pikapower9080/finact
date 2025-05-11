@@ -8,6 +8,7 @@ import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";
 import ItemListActions from "../../Components/ItemListActions";
+import Fallback from "../../Components/Fallback";
 
 const storage = getStorage();
 
@@ -37,14 +38,35 @@ export default function Album() {
   const { id } = useParams();
 
   const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
+  const [errorIcon, setErrorIcon] = useState("album");
   const { loading, setLoading } = useContext(GlobalState);
 
   useEffect(() => {
     setLoading(true);
     const fetchPlaylistData = async () => {
-      const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete&SortBy=IndexNumber`)]);
-      setData({ data: responses[0], discs: getDiscGroups(responses[1].Items) });
-      setLoading(false);
+      try {
+        const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete&SortBy=IndexNumber`)]);
+        setData({ data: responses[0], discs: getDiscGroups(responses[1].Items) });
+      } catch (err) {
+        console.error(err);
+        if (err.toString().includes("400")) {
+          setError("Album does not exist");
+          setErrorIcon("question_mark");
+        } else if (err.toString().includes("403")) {
+          setError("You do not have permission to view this album");
+          setErrorIcon("lock");
+        } else if (err.toString().includes("NetworkError")) {
+          setError("Network error");
+          setErrorIcon("wifi_off");
+        } else {
+          console.log("Album error unknown");
+          setError("Album failed to load");
+        }
+        setData(false);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchPlaylistData();
@@ -120,7 +142,7 @@ export default function Album() {
           })}
         </>
       ) : (
-        ""
+        !loading && error && <Fallback icon={errorIcon} text={error} />
       )}
     </>
   );
