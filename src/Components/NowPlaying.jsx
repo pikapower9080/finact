@@ -12,18 +12,14 @@ import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
-import { getCacheStorage } from "../storage";
-
-const cacheStorage = getCacheStorage();
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
-  const { playbackState, setPlaybackState } = useContext(GlobalState);
+  const { playbackState, setPlaybackState, queue, setQueue } = useContext(GlobalState);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const isScrubbing = useRef(false);
-  const { setLoading } = useContext(GlobalState);
 
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);
@@ -185,41 +181,43 @@ export default function NowPlaying(props) {
   }
 
   function next() {
-    if ("queue" in playbackState) {
-      if (playbackState.queue.index == playbackState.queue.items.length - 1) {
+    if (queue && queue.items && queue.items.length > 0) {
+      if (queue.index == queue.items.length - 1) {
         // end playback on the last song
         setPlaybackState(null);
         return;
       }
-      const nextItem = playbackState.queue.items[playbackState.queue.index + 1];
+      const nextItem = queue.items[queue.index + 1];
       setPlaybackState({
         item: nextItem,
         playing: true,
-        position: 0,
-        queue: {
-          items: playbackState.queue.items,
-          index: playbackState.queue.index + 1
-        }
+        position: 0
       });
+      setQueue({
+        items: queue.items,
+        index: queue.index + 1
+      });
+    } else {
+      setPlaybackState(null);
     }
   }
 
   function previous() {
-    if ("queue" in playbackState && audioRef.current.currentTime < 4) {
-      if (playbackState.queue.index == 0) {
+    if (queue && audioRef.current.currentTime < 4) {
+      if (queue.index == 0) {
         // end playback on the first song
         setPlaybackState(null);
         return;
       }
-      const prevItem = playbackState.queue.items[playbackState.queue.index - 1];
+      const prevItem = queue.items[queue.index - 1];
       setPlaybackState({
         item: prevItem,
         playing: true,
-        position: 0,
-        queue: {
-          items: playbackState.queue.items,
-          index: playbackState.queue.index - 1
-        }
+        position: 0
+      });
+      setQueue({
+        items: queue.items,
+        index: queue.index - 1
       });
     } else {
       setPlaybackState((prevState) => ({
@@ -232,6 +230,7 @@ export default function NowPlaying(props) {
   return (
     <>
       <audio
+        className="playback-audio"
         ref={audioRef}
         crossOrigin="anonymous"
         src={`${storage.get("serverURL")}/Audio/${props.state.item.Id}/Universal?itemId=${props.state.item.Id}&deviceId=${storage.get("DeviceId")}&userId=${getUser().Id}&Container=opus,webm|opus,ts|mp3,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&api_key=${storage.get("AccessToken")}`}
@@ -271,7 +270,15 @@ export default function NowPlaying(props) {
             onScrubChange={setPosition}
           />
           <FlexboxGrid justify="space-around" align="middle">
-            <FlexboxGrid.Item style={{ flex: 1 }}>
+            <FlexboxGrid.Item
+              style={{ flex: 1 }}
+              className="pointer"
+              onClick={() => {
+                if (lyricsOpen) setLyricsOpen(false);
+                if (visualizerOpen) setVisualizerOpen(false);
+                window.location.href = "/#queue";
+              }}
+            >
               <HStack spacing={10}>
                 <Avatar size="sm" src={getAlbumArt(props.state.item)} />
                 <div>
@@ -347,27 +354,12 @@ export default function NowPlaying(props) {
                     <Icon icon={"lyrics"} noSpace />
                   </Button>
                 )}
-                <Button
-                  className="square"
-                  appearance="subtle"
-                  title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`}
-                  onClick={() => {
-                    setPlaybackState((prevState) => ({
-                      ...prevState,
-                      item: {
-                        ...prevState.item,
-                        UserData: {
-                          ...prevState.item.UserData,
-                          IsFavorite: !prevState.item.UserData.IsFavorite
-                        }
-                      }
-                    }));
-                  }}
-                >
+                <Button className="square" appearance="subtle" title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`} onClick={() => {}}>
                   <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
                 </Button>
                 <ItemContextMenu
                   item={props.state.item}
+                  type="now-playing"
                   menuButton={
                     <Button appearance="subtle" className="square">
                       <Icon icon="more_vert" noSpace />

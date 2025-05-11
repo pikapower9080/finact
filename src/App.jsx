@@ -15,6 +15,7 @@ import Playlist from "./Routes/Playlists/:id";
 import Album from "./Routes/Albums/:id";
 import Search from "./Routes/Search";
 import AddToPlaylist from "./Components/AddToPlaylist";
+import Queue from "./Routes/Queue";
 
 const storage = getStorage();
 
@@ -34,12 +35,13 @@ export const GlobalState = createContext();
 function App() {
   const [user, setUser] = useState(getUser);
   const [playbackState, setPlaybackState] = useState(null);
+  const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(false);
   const [addToPlaylistItem, setAddToPlaylistItem] = useState(null);
 
   const toaster = useToaster();
 
-  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem };
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem, queue, setQueue };
 
   useEffect(() => {
     window.debug = globalState;
@@ -59,6 +61,7 @@ function App() {
                 <HashRouter>
                   <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/queue" element={<Queue />} />
                     <Route path="/playlists" element={<Playlists />} />
                     <Route path="/playlists/:id" element={<Playlist />} />
                     <Route path="/collections" element={<Collections />} />

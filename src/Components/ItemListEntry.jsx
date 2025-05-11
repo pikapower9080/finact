@@ -4,9 +4,10 @@ import { GlobalState } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
 import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
+import { playItem } from "../Util/Helpers";
 
 export function ItemListEntry({ item, index, type, allItems }) {
-  const { playbackState, setPlaybackState } = useContext(GlobalState);
+  const { queue, setQueue, setPlaybackState } = useContext(GlobalState);
   const moreButtonRef = useRef();
 
   return (
@@ -15,20 +16,11 @@ export function ItemListEntry({ item, index, type, allItems }) {
       index={index}
       className="pointer"
       onClick={async () => {
-        const newState = {
-          item,
-          playing: true,
-          position: 0
-        };
-
-        if (allItems) {
-          const itemIndex = allItems.findIndex((i) => i.Id === item.Id);
-          newState.queue = { items: allItems, index: itemIndex };
-        }
-        setPlaybackState(newState);
+        playItem(setPlaybackState, setQueue, item, allItems);
       }}
     >
       <HStack spacing={15} alignItems="center">
+        {type == "queue" && <Icon icon="drag_handle" style={{ color: "var(--rs-text-secondary)" }} noSpace />}
         {type == "album" && item.IndexNumber && <Text muted>{item.IndexNumber}</Text>}
         {type != "album" && <Avatar src={getAlbumArt(item, 160)} />}
         <VStack spacing={0}>
@@ -47,8 +39,25 @@ export function ItemListEntry({ item, index, type, allItems }) {
               {formatTimestamp(item.RunTimeTicks / 10000000)}
             </Text>
           </VStack>
+          {type == "queue" && (
+            <Button
+              appearance="subtle"
+              className="square"
+              onClick={(e) => {
+                e.stopPropagation();
+                setQueue((prevState) => {
+                  const newItems = [...prevState.items];
+                  newItems.splice(index, 1);
+                  return { ...prevState, items: newItems };
+                });
+              }}
+            >
+              <Icon icon="remove_circle_outline" noSpace />
+            </Button>
+          )}
           <ItemContextMenu
             item={item}
+            type={type}
             menuButton={
               <Button
                 appearance="subtle"

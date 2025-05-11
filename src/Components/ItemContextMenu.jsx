@@ -5,14 +5,70 @@ import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
 import { useContext } from "react";
 import copy from "copy-to-clipboard";
+import { playItem } from "../Util/Helpers";
+import { infoNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
-export default function ItemContextMenu({ item, menuButton }) {
+export default function ItemContextMenu({ item, menuButton, type }) {
   const { loading, setLoading, setAddToPlaylistItem } = useContext(GlobalState);
+  const { setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
   const menuCategories = [];
+
+  let playbackCategory = [];
+
+  if (type !== "queue" && type !== "now-playing") {
+    if (item.Type === "Audio") {
+      playbackCategory.push({
+        icon: "play_arrow",
+        label: "Play",
+        action: () => {
+          playItem(setPlaybackState, setQueue, item);
+        }
+      });
+      playbackCategory.push({
+        icon: "playlist_add",
+        label: "Add to queue",
+        action: () => {
+          if (queue && queue.items) {
+            // Check if the item is already in the queue
+            const isInQueue = queue.items.some((queueItem) => queueItem.Id === item.Id);
+            if (isInQueue) {
+              toaster.push(infoNotification("Error", "Item is already in the queue"));
+              return;
+            }
+          }
+          setQueue((prevQueue) => {
+            const newQueue = prevQueue ? { ...prevQueue, items: [...prevQueue.items, item] } : { items: [item], index: 0 };
+            return newQueue;
+          });
+        }
+      });
+      playbackCategory.push({
+        icon: "playlist_add",
+        label: "Play next",
+        action: () => {
+          if (queue && queue.items) {
+            // Check if the item is already in the queue
+            const isInQueue = queue.items.some((queueItem) => queueItem.Id === item.Id);
+            if (isInQueue) {
+              toaster.push(infoNotification("Error", "Item is already in the queue"));
+              return;
+            }
+          }
+          setQueue((prevQueue) => {
+            // Insert the item at the next position in the queue
+            const newQueue = prevQueue ? { ...prevQueue, items: [...prevQueue.items] } : { items: [], index: 0 };
+            newQueue.items.splice(newQueue.index + 1, 0, item);
+            return newQueue;
+          });
+        }
+      });
+      menuCategories.push(playbackCategory);
+    }
+  }
 
   if (item.Type === "Audio") {
     const generalCategory = [];

@@ -5,6 +5,7 @@ import { getStorage } from "../storage";
 import { jellyfinRequest } from "../Util/Network";
 import ItemTile from "../Components/ItemTile";
 import { GlobalState } from "../App";
+import { playItem } from "../Util/Helpers";
 
 const storage = getStorage();
 
@@ -53,7 +54,7 @@ export default function Search() {
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
 
-  const { setPlaybackState } = useContext(GlobalState);
+  const { setPlaybackState, setQueue } = useContext(GlobalState);
 
   return (
     <>
@@ -97,15 +98,7 @@ export default function Search() {
                             className: "pointer",
                             onClick: (e) => {
                               if (item.Type && item.Type == "Audio") {
-                                setPlaybackState({
-                                  item,
-                                  playing: true,
-                                  position: 0,
-                                  queue: {
-                                    items: category.Items,
-                                    index: category.Items.findIndex((x) => x.Id == item.Id)
-                                  }
-                                });
+                                playItem(setPlaybackState, setQueue, item, category.Items);
                               } else if (item.Type == "MusicAlbum") {
                                 window.location.href = `/#albums/${item.Id}`;
                               } else if (item.Type == "Playlist") {

@@ -3,6 +3,7 @@ import { getUser, GlobalState } from "../App";
 import { useContext, useState, useEffect } from "react";
 import { jellyfinRequest, getLibrary } from "../Util/Network";
 import ItemTile from "../Components/ItemTile";
+import { playItem } from "../Util/Helpers";
 
 export default function Home() {
   const { playbackState, setPlaybackState } = useContext(GlobalState);
@@ -60,7 +61,7 @@ export function RecentlyAdded() {
 
 export function FrequentlyPlayed() {
   const [frequentlyPlayed, setFrequentlyPlayed] = useState();
-  const { playbackState, setPlaybackState } = useContext(GlobalState);
+  const { setQueue, setPlaybackState } = useContext(GlobalState);
 
   useEffect(() => {
     getLibrary("music").then((musicLibrary) => {
@@ -101,11 +102,7 @@ export function FrequentlyPlayed() {
                   item={item}
                   tileProps={{
                     onClick: () => {
-                      setPlaybackState({
-                        item,
-                        playing: true,
-                        position: 0
-                      });
+                      playItem(setPlaybackState, setQueue, item);
                     },
                     className: "pointer"
                   }}
