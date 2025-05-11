@@ -1,5 +1,5 @@
 import { Header, Navbar, Nav, Avatar, Image, Drawer, Sidenav } from "rsuite";
-import { getStorage } from "../storage";
+import { getStorage, getCacheStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getUser } from "../App";
@@ -7,6 +7,7 @@ import { useMediaQuery } from "rsuite/esm/useMediaQuery/useMediaQuery";
 import { useState } from "react";
 
 const storage = getStorage();
+const cacheStorage = getCacheStorage();
 
 export default function MainHeader(props) {
   const [collapsedHeader] = useMediaQuery("(max-width: 571px)");
@@ -101,6 +102,7 @@ export default function MainHeader(props) {
                 <MenuItem
                   onClick={() => {
                     storage.clearAll();
+                    cacheStorage.clearAll();
                     window.location.reload();
                   }}
                 >

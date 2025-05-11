@@ -52,7 +52,7 @@ export default function Album() {
         console.error(err);
         if (err.toString().includes("400")) {
           setError("Album does not exist");
-          setErrorIcon("question_mark");
+          setErrorIcon("search_off");
         } else if (err.toString().includes("403")) {
           setError("You do not have permission to view this album");
           setErrorIcon("lock");

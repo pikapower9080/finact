@@ -62,7 +62,7 @@ export function SignIn(props) {
           <Form.Group content="serverURL">
             <Form.ControlLabel>Server URL</Form.ControlLabel>
             <InputGroup style={styles}>
-              <Form.Control name="serverURL" placeholder="https://demo.jellyfin.org" />
+              <Form.Control name="serverURL" placeholder="https://jellyfin.example.com" />
               <InputGroup.Button loading={loading} type="submit">
                 <Icon icon="arrow_forward" size="tiny" />
               </InputGroup.Button>
