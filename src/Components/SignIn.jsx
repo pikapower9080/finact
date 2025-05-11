@@ -1,6 +1,6 @@
 import { Form, InputGroup, Stack, Panel, useToaster, Notification } from "rsuite";
 import { getStorage } from "../storage";
-import { jellyfinRequest } from "../Util/Network";
+import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { useContext, useState } from "react";
 import Icon from "./Icon";
 import { GlobalState } from "../App";
@@ -93,6 +93,13 @@ export function SignIn(props) {
               storage.set("AccessToken", authResult.AccessToken);
               storage.set("User", authResult.User);
               setLoading(false);
+              try {
+                await getLibrary("music");
+              } catch (e) {
+                toaster.push(errorNotification("Server error", "You must have at least one music library accessible to use Finact."));
+                storage.set("AccessToken", null);
+                return;
+              }
               props.setUser(authResult.User);
             } catch (e) {
               console.error(e);
