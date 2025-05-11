@@ -17,7 +17,9 @@ export default function Icon(props) {
 
   return (
     <>
-      <i className={classes.join(" ")}>{props.icon}</i>
+      <i className={classes.join(" ")} style={props.style || {}}>
+        {props.icon}
+      </i>
     </>
   );
 }
