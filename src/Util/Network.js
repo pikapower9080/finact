@@ -44,6 +44,9 @@ export async function getLibrary(type) {
   }
   const libraries = await jellyfinRequest("/UserViews?userId=" + storage.get("User").Id);
   const library = libraries.Items.filter((library) => library.CollectionType && library.CollectionType == type)[0];
+  if (!library) {
+    throw new Error("Library not found");
+  }
   cacheStorage.set(`library-${type}`, library);
   return library;
 }
