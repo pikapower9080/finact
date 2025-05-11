@@ -6,7 +6,7 @@ import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
 import { playItem } from "../Util/Helpers";
 
-export function ItemListEntry({ item, index, type, allItems }) {
+export function ItemListEntry({ item, index, type, allItems, setSortable }) {
   const { queue, setQueue, setPlaybackState } = useContext(GlobalState);
   const moreButtonRef = useRef();
 
@@ -20,7 +20,18 @@ export function ItemListEntry({ item, index, type, allItems }) {
       }}
     >
       <HStack spacing={15} alignItems="center">
-        {type == "queue" && <Icon icon="drag_handle" style={{ color: "var(--rs-text-secondary)" }} noSpace />}
+        {type == "queue" && (
+          <div
+            onMouseEnter={() => {
+              setSortable(true);
+            }}
+            onMouseLeave={() => {
+              setSortable(false);
+            }}
+          >
+            <Icon icon="drag_handle" style={{ color: "var(--rs-text-secondary)" }} noSpace />
+          </div>
+        )}
         {type == "album" && item.IndexNumber && <Text muted>{item.IndexNumber}</Text>}
         {type != "album" && <Avatar src={getAlbumArt(item, 160)} />}
         <VStack spacing={0}>

@@ -10,14 +10,14 @@ import Fallback from "../Components/Fallback";
 const cacheStorage = getCacheStorage();
 
 export default function Queue() {
-  const { playbackState, setPlaybackState, queue, setQueue } = useContext(GlobalState);
+  const { queue, setQueue } = useContext(GlobalState);
+  const [sortable, setSortable] = useState(false);
 
   const handleSortEnd = ({ oldIndex, newIndex }) =>
     setQueue(() => {
       const moveData = queue.items.splice(oldIndex, 1);
       const newData = [...queue.items];
       newData.splice(newIndex, 0, moveData[0]);
-      console.log({ ...queue, items: newData });
       return { ...queue, items: newData };
     }, []);
 
@@ -27,9 +27,9 @@ export default function Queue() {
         <Fallback icon="queue_music" text="Queue is empty" />
       ) : (
         <>
-          <List bordered sortable hover onSort={handleSortEnd} pressDelay={200}>
+          <List bordered sortable={sortable} hover onSort={handleSortEnd}>
             {queue.items.map((item, index) => {
-              return <ItemListEntry item={item} type="queue" index={index} key={item.Id} allItems={queue.items} />;
+              return <ItemListEntry item={item} type="queue" index={index} key={item.Id} allItems={queue.items} setSortable={setSortable} />;
             })}
           </List>
         </>
