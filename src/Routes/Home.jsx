@@ -102,7 +102,7 @@ export function FrequentlyPlayed() {
                   item={item}
                   tileProps={{
                     onClick: () => {
-                      playItem(setPlaybackState, setQueue, item);
+                      playItem(setPlaybackState, setQueue, item, frequentlyPlayed.Items);
                     },
                     className: "pointer"
                   }}
