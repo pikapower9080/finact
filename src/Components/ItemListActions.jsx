@@ -4,9 +4,10 @@ import { useContext, useState } from "react";
 import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
 import ItemContextMenu from "./ItemContextMenu";
+import { playItem } from "../Util/Helpers";
 
 export default function ItemListActions({ parent, items, type }) {
-  const { setPlaybackState } = useContext(GlobalState);
+  const { setPlaybackState, setQueue } = useContext(GlobalState);
   const [isFavorite, setIsFavorite] = useState(parent.UserData.IsFavorite);
   const [loadingIsFavorite, setLoadingIsFavorite] = useState(false);
 
@@ -16,15 +17,7 @@ export default function ItemListActions({ parent, items, type }) {
         className="square subtle-bordered"
         appearance="subtle"
         onClick={() => {
-          setPlaybackState({
-            item: items[0],
-            playing: true,
-            position: 0,
-            queue: {
-              items,
-              index: 0
-            }
-          });
+          playItem(setPlaybackState, setQueue, items[0], items);
         }}
       >
         <Icon icon="play_arrow" noSpace />
@@ -34,15 +27,7 @@ export default function ItemListActions({ parent, items, type }) {
         appearance="subtle"
         onClick={() => {
           const shuffledItems = [...items].sort(() => Math.random() - 0.5);
-          setPlaybackState({
-            item: shuffledItems[0],
-            playing: true,
-            position: 0,
-            queue: {
-              items: shuffledItems,
-              index: 0
-            }
-          });
+          playItem(setPlaybackState, setQueue, shuffledItems[0], shuffledItems);
         }}
       >
         <Icon icon="shuffle" noSpace />
