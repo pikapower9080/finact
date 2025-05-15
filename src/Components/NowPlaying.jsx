@@ -12,6 +12,7 @@ import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
+import { isElectron } from "../Util/Helpers";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
@@ -90,7 +91,7 @@ export default function NowPlaying(props) {
         setPosition(newTime * 1000);
       });
 
-      if (getPWADisplayMode() == "browser") {
+      if (getPWADisplayMode() == "browser" && !isElectron) {
         document.title = `${props.state.item.Name} - ${getArtistDisplay(props.state.item.Artists)} - Finact`;
       } else {
         document.title = "Finact";
@@ -276,7 +277,7 @@ export default function NowPlaying(props) {
               onClick={() => {
                 if (lyricsOpen) setLyricsOpen(false);
                 if (visualizerOpen) setVisualizerOpen(false);
-                window.location.href = "/#queue";
+                window.location.hash = "#queue";
               }}
             >
               <HStack spacing={10}>

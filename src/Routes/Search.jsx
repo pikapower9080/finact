@@ -100,9 +100,9 @@ export default function Search() {
                               if (item.Type && item.Type == "Audio") {
                                 playItem(setPlaybackState, setQueue, item, category.Items);
                               } else if (item.Type == "MusicAlbum") {
-                                window.location.href = `/#albums/${item.Id}`;
+                                window.location.hash = `#albums/${item.Id}`;
                               } else if (item.Type == "Playlist") {
-                                window.location.href = `/#playlists/${item.Id}`;
+                                window.location.hash = `#playlists/${item.Id}`;
                               } else {
                                 console.warn("Unknown item type", item);
                               }

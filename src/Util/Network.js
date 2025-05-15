@@ -1,5 +1,6 @@
 import { getCacheStorage, getStorage } from "../storage";
 import { getDeviceId } from "./Formatting";
+import { isElectron } from "./Helpers";
 const storage = getStorage();
 const cacheStorage = getCacheStorage();
 
@@ -21,7 +22,7 @@ export async function jellyfinRequest(url, options = {}, format = "json") {
   }
   options.headers = {
     ...options.headers,
-    Authorization: `MediaBrowser Client="Finact", Device="Web", DeviceId="${getDeviceId()}", Version="1.0.0"${accessToken ? `, Token="${accessToken}"` : ""}`
+    Authorization: `MediaBrowser Client="Finact", Device="${isElectron ? "Desktop" : "Web"}", DeviceId="${getDeviceId()}", Version="1.0.0"${accessToken ? `, Token="${accessToken}"` : ""}`
   };
   if (format === "json") {
     return fetchJSON(`${serverURL}${url}`, options);

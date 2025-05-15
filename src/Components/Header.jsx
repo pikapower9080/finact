@@ -5,6 +5,7 @@ import Icon from "./Icon";
 import { getUser } from "../App";
 import { useMediaQuery } from "rsuite/esm/useMediaQuery/useMediaQuery";
 import { useState } from "react";
+import { isElectron } from "../Util/Helpers";
 
 const storage = getStorage();
 const cacheStorage = getCacheStorage();
@@ -22,15 +23,21 @@ export default function MainHeader(props) {
   function LibraryNavigation() {
     return (
       <>
-        <Nav.Item href="/#" onClick={closeSideNav}>
+        <Nav.Item
+          href="#"
+          onClick={() => {
+            closeSideNav();
+            location.hash = "#";
+          }}
+        >
           <Icon icon="home" />
           <span>Home</span>
         </Nav.Item>
-        <Nav.Item href="/#playlists" onClick={closeSideNav}>
+        <Nav.Item href="#playlists" onClick={closeSideNav}>
           <Icon icon="video_library" />
           <span>Playlists</span>
         </Nav.Item>
-        <Nav.Item href="/#collections" onClick={closeSideNav}>
+        <Nav.Item href="#collections" onClick={closeSideNav}>
           <Icon icon="photo_library" />
           <span>Collections</span>
         </Nav.Item>
@@ -76,7 +83,7 @@ export default function MainHeader(props) {
         <Nav pullRight>
           {props.user ? (
             <>
-              <Nav.Item as="a" href="/#search">
+              <Nav.Item as="a" href="#search">
                 <Icon icon="search" noSpace />
               </Nav.Item>
               <Menu
@@ -109,6 +116,12 @@ export default function MainHeader(props) {
                   <Icon icon="logout" />
                   Sign out
                 </MenuItem>
+                {isElectron && (
+                  <MenuItem onClick={() => window.close()}>
+                    <Icon icon="close" />
+                    Quit
+                  </MenuItem>
+                )}
               </Menu>
             </>
           ) : (

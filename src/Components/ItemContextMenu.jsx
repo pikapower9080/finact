@@ -77,7 +77,7 @@ export default function ItemContextMenu({ item, menuButton, type }) {
         icon: "album",
         label: "Go to Album",
         action: () => {
-          window.location.href = "/#albums/" + item.AlbumId;
+          window.location.hash = "#albums/" + item.AlbumId;
         }
       });
     }

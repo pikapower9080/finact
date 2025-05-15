@@ -34,7 +34,7 @@ export default function Collection() {
                   item={item}
                   tileProps={{
                     onClick: () => {
-                      location.href = "/#albums/" + item.Id;
+                      location.hash = "#albums/" + item.Id;
                     },
                     className: "pointer"
                   }}

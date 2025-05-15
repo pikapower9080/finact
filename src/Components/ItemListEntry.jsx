@@ -39,7 +39,7 @@ export function ItemListEntry({ item, index, type, allItems, setSortable }) {
           {type == "album"
             ? item.Artists && item.Artists.length > 0 && <Text muted>{item.Artists.join(" / ")}</Text>
             : item.Album && (
-                <Text as="a" href={`/#albums/${item.AlbumId}`} muted onClick={(e) => e.stopPropagation()}>
+                <Text as="a" href={`#albums/${item.AlbumId}`} muted onClick={(e) => e.stopPropagation()}>
                   {item.Album}
                 </Text>
               )}

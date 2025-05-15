@@ -49,7 +49,7 @@ export function RecentlyAdded() {
           <Grid fluid>
             <Row gutter={16}>
               {recentItems.map((item, index) => (
-                <ItemTile item={item} tileProps={{ onClick: () => (window.location.href = `/#albums/${item.Id}`), className: "pointer" }} key={item.Id} />
+                <ItemTile item={item} tileProps={{ onClick: () => (window.location.hash = `#albums/${item.Id}`), className: "pointer" }} key={item.Id} />
               ))}
             </Row>
           </Grid>

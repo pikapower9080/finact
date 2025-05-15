@@ -9,13 +9,19 @@ const storage = getStorage();
 
 export default function AddToPlaylist({ item }) {
   const { setAddToPlaylistItem, toaster } = useContext(GlobalState);
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState(null);
+  const [error, setError] = useState(false);
 
   async function fetchPlaylists() {
     if (!item) return;
-    const playlistsLibrary = await getLibrary("playlists");
-    const response = await jellyfinRequest(`/Users/${getUser().Id}/Items?StartIndex=0&Limit=100&Fields=PrimaryImageAspectRatio,SortName,Path,ChildCount&ImageTypeLimit=1&ParentId=${playlistsLibrary.Id}&SortBy=IsFolder,SortName&SortOrder=Ascending`);
-    setPlaylists(response.Items);
+    try {
+      const playlistsLibrary = await getLibrary("playlists");
+      const response = await jellyfinRequest(`/Users/${getUser().Id}/Items?StartIndex=0&Limit=100&Fields=PrimaryImageAspectRatio,SortName,Path,ChildCount&ImageTypeLimit=1&ParentId=${playlistsLibrary.Id}&SortBy=IsFolder,SortName&SortOrder=Ascending`);
+      setPlaylists(response.Items);
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    }
   }
 
   useEffect(() => {
@@ -33,7 +39,7 @@ export default function AddToPlaylist({ item }) {
         <Modal.Title>Add to Playlist</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {playlists.length > 0 ? (
+        {playlists ? (
           <>
             <List bordered hover className="pointer">
               {playlists.map((playlist) => {
@@ -48,7 +54,7 @@ export default function AddToPlaylist({ item }) {
                         toaster.push(errorNotification("Failed to add to playlist", e.toString().includes("Forbidden") ? "You do not have permission to add items to this playlist" : e.toString()));
                         return;
                       }
-                      toaster.push(successNotification("Added to playlist", `${item.Name} has been added to ${playlist.Name}.`, { onClick: () => (window.location.href = `/#playlists/${playlist.Id}`), className: "pointer" }));
+                      toaster.push(successNotification("Added to playlist", `${item.Name} has been added to ${playlist.Name}.`, { onClick: () => (window.location.hash = `#playlists/${playlist.Id}`), className: "pointer" }));
                     }}
                   >
                     <HStack spacing={10}>
@@ -63,8 +69,10 @@ export default function AddToPlaylist({ item }) {
               })}
             </List>
           </>
-        ) : (
+        ) : !error ? (
           <Placeholder.Paragraph graph="square" active />
+        ) : (
+          <Text>No playlists yet</Text>
         )}
       </Modal.Body>
     </Modal>
