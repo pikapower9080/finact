@@ -23,7 +23,7 @@ function createWindow() {
   if (process.env.NODE_ENV === "dev") {
     win.loadFile(path.join(__dirname, "../dist/index.html"));
   } else {
-    win.loadFile(path.join(__dirname, "dist/index.html"));
+    win.loadFile(path.join(__dirname, "../build/dist/index.html"));
   }
 
   win.once("ready-to-show", win.show);

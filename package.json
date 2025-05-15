@@ -8,9 +8,9 @@
   "main": "app/main.js",
   "scripts": {
     "dev": "vite --host --port 3000",
-    "dev:electron": "NODE_ENV=dev bun run build && electron app/main.js",
+    "dev:electron": "bun run build && NODE_ENV=dev electron app/main.js",
     "build": "vite build --base=./",
-    "build:electron": "rm -rf dist && vite build --base=./ --outDir app/dist && electron-builder",
+    "build:electron": "rm -rf dist && vite build --base=./ --outDir build/dist && electron-builder",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write ."
@@ -49,8 +49,9 @@
   "build": {
     "appId": "dev.pikarocks.finact",
     "mac": {
-      "category": "public.app-category.music"
+      "category": "public.app-category.music",
+      "target": ["zip"]
     },
-    "files": ["app/**/*"]
+    "files": ["app/main.js", "build/dist/**/*"]
   }
 }
