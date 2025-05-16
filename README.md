@@ -1,7 +1,7 @@
 # Finact
 
 > [!WARNING]
-> Finact is still a **work in progress** and currently is nowhere near being feature-complete or stable. There is also no desktop app at the moment.
+> Finact is still a **work in progress** and currently is not feature-complete nor stable.
 
 Finact is a modern [Jellyfin](https://jellyfin.org/) client written in React made for listening to music on desktop and the web. Finact focuses on aesthetics and unique features.
 
@@ -20,4 +20,4 @@ Finact is a modern [Jellyfin](https://jellyfin.org/) client written in React mad
 
 1. Not supported on Linux, no album art
 2. Poor support for MacOS
-3. Requires Chromium
+3. Requires Chromium or desktop
