@@ -50,6 +50,6 @@
       "category": "public.app-category.music",
       "target": ["zip"]
     },
-    "files": ["app/main.js", "build/dist/**/*"]
+    "files": ["app/*", "build/dist/**/*"]
   }
 }
