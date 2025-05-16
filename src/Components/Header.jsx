@@ -117,7 +117,7 @@ export default function MainHeader(props) {
                   Sign out
                 </MenuItem>
                 {isElectron && (
-                  <MenuItem onClick={() => window.close()}>
+                  <MenuItem onClick={() => electron.sendMessage(JSON.stringify({ type: "quit" }))}>
                     <Icon icon="close" />
                     Quit
                   </MenuItem>

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import Store from "electron-store";
 import path from "path";
 
@@ -15,7 +15,10 @@ function createWindow() {
     minWidth: 400,
     minHeight: 400,
     darkTheme: true,
-    show: true
+    show: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js")
+    }
   };
   Object.assign(options, config.get("windowBounds"));
 
@@ -41,6 +44,19 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+});
+
+ipcMain.on("message-from-renderer", async (event, data) => {
+  data = JSON.parse(data);
+  if (data.type) {
+    switch (data.type) {
+      case "quit":
+        app.quit();
+        break;
+      default:
+        break;
+    }
+  }
 });
 
 // app.on("window-all-closed", () => {
