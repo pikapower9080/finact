@@ -1,4 +1,4 @@
-import { Heading, Input, InputGroup, Text, Form, Grid, Row } from "rsuite";
+import { Heading, Input, InputGroup, Text, Form, Grid, Row, FlexboxGrid } from "rsuite";
 import Icon from "../Components/Icon";
 import { useState, useEffect, Fragment, useContext } from "react";
 import { getStorage } from "../storage";
@@ -6,6 +6,7 @@ import { jellyfinRequest } from "../Util/Network";
 import ItemTile from "../Components/ItemTile";
 import { GlobalState } from "../App";
 import { playItem } from "../Util/Helpers";
+import Fallback from "../Components/Fallback";
 
 const storage = getStorage();
 
@@ -58,68 +59,76 @@ export default function Search() {
 
   return (
     <>
-      <Heading level={3}>Search</Heading>
-      <Form
-        onSubmit={async () => {
-          if (searching) return;
-          setSearching(true);
-          setSearchResults(await searchInstance(searchQuery));
-          setSearched(true);
-          setSearching(false);
-        }}
-      >
-        <InputGroup>
-          <Input autoFocus value={searchQuery} onChange={setSearchQuery} />
-          <InputGroup.Button type="submit" loading={searching} disabled={searching}>
-            <Icon icon="search" noSpace />
-          </InputGroup.Button>
-        </InputGroup>
-      </Form>
-      {searchResults.length > 0 ? (
-        <>
-          {searchResults.map((category, index) => {
-            if (!("Items" in category) || category.Items.length == 0) {
-              return null;
-            }
-            return (
-              <Fragment key={index}>
-                <Heading level={4} style={{ marginBlock: 10 }}>
-                  {itemTypeDisplayNames[category.Type] || "Unknown"}
-                </Heading>
-                <Grid fluid>
-                  <Row gutter={16}>
-                    {category.Items.map((item) => {
-                      if (!item || item.Id == null) return;
-                      return (
-                        <ItemTile
-                          item={item}
-                          key={item.Id}
-                          tileProps={{
-                            className: "pointer",
-                            onClick: (e) => {
-                              if (item.Type && item.Type == "Audio") {
-                                playItem(setPlaybackState, setQueue, item, category.Items);
-                              } else if (item.Type == "MusicAlbum") {
-                                window.location.hash = `#albums/${item.Id}`;
-                              } else if (item.Type == "Playlist") {
-                                window.location.hash = `#playlists/${item.Id}`;
-                              } else {
-                                console.warn("Unknown item type", item);
-                              }
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </Row>
-                </Grid>
-              </Fragment>
-            );
-          })}
-        </>
-      ) : (
-        searched && "No results found"
-      )}
+      <FlexboxGrid style={{ flexDirection: "column", minHeight: "100%" }}>
+        <FlexboxGrid.Item>
+          <Heading level={3}>Search</Heading>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item style={{ width: "100%" }}>
+          <Form
+            onSubmit={async () => {
+              if (searching) return;
+              setSearching(true);
+              setSearchResults(await searchInstance(searchQuery));
+              setSearched(true);
+              setSearching(false);
+            }}
+          >
+            <InputGroup>
+              <Input autoFocus value={searchQuery} onChange={setSearchQuery} />
+              <InputGroup.Button type="submit" loading={searching} disabled={searching}>
+                <Icon icon="search" noSpace />
+              </InputGroup.Button>
+            </InputGroup>
+          </Form>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item style={{ width: "100%", flexGrow: 1, display: searched && searchResults.length == 0 ? "flex" : "unset", alignItems: "center" }}>
+          {searchResults.length > 0 ? (
+            <>
+              {searchResults.map((category, index) => {
+                if (!("Items" in category) || category.Items.length == 0) {
+                  return null;
+                }
+                return (
+                  <Fragment key={index}>
+                    <Heading level={4} style={{ marginBlock: 10 }}>
+                      {itemTypeDisplayNames[category.Type] || "Unknown"}
+                    </Heading>
+                    <Grid fluid>
+                      <Row gutter={16}>
+                        {category.Items.map((item) => {
+                          if (!item || item.Id == null) return;
+                          return (
+                            <ItemTile
+                              item={item}
+                              key={item.Id}
+                              tileProps={{
+                                className: "pointer",
+                                onClick: (e) => {
+                                  if (item.Type && item.Type == "Audio") {
+                                    playItem(setPlaybackState, setQueue, item, category.Items);
+                                  } else if (item.Type == "MusicAlbum") {
+                                    window.location.hash = `#albums/${item.Id}`;
+                                  } else if (item.Type == "Playlist") {
+                                    window.location.hash = `#playlists/${item.Id}`;
+                                  } else {
+                                    console.warn("Unknown item type", item);
+                                  }
+                                }
+                              }}
+                            />
+                          );
+                        })}
+                      </Row>
+                    </Grid>
+                  </Fragment>
+                );
+              })}
+            </>
+          ) : (
+            searched && <Fallback icon="search_off" text="No results found" />
+          )}
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
     </>
   );
 }
