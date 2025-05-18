@@ -50,6 +50,9 @@
       "category": "public.app-category.music",
       "target": ["zip"]
     },
+    "linux": {
+      "target": ["appimage"]
+    },
     "files": ["app/*", "build/dist/**/*"]
   }
 }
