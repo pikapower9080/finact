@@ -15,6 +15,7 @@ let playbackState = {
   state: { playing: false },
   queue: []
 };
+let connectedSockets = [];
 
 function createWindow() {
   let options = {
@@ -63,10 +64,29 @@ ipcMain.on("message-from-renderer", async (event, data) => {
         break;
       case "playback-state-changed":
         playbackState = { state: data.state, queue: data.queue };
+        connectedSockets.forEach((socket) => {
+          socket.send(
+            JSON.stringify({
+              type: "playback-state",
+              state: playbackState.state,
+              queue: playbackState.queue
+            })
+          );
+        });
         break;
       case "playback-progress":
         if (playbackState.state) {
           playbackState.state.position = data.position;
+          connectedSockets.forEach((socket) => {
+            if (socket && socket.readyState === 1) {
+              socket.send(
+                JSON.stringify({
+                  type: "playback-progress",
+                  position: playbackState.state.position
+                })
+              );
+            }
+          });
         }
         break;
       default:
@@ -110,11 +130,28 @@ server.get("/basicQueue", (_, res) => {
       items: playbackState.queue.items?.map((item) => {
         return {
           Id: item.Id,
-          Name: item.Name,
-          Type: item.Type
+          Name: item.Name
         };
       })
     }
+  });
+});
+
+server.ws("/", (ws, req) => {
+  let index;
+  connectedSockets.push(ws);
+  index = connectedSockets.length - 1;
+  console.log(`WebSocket connection ${index} opened from ${req.ip}`);
+  ws.send(
+    JSON.stringify({
+      type: "playback-state",
+      state: playbackState.state,
+      queue: playbackState.queue
+    })
+  );
+  ws.on("close", () => {
+    console.log(`WebSocket connection ${index} closed`);
+    delete connectedSockets[index];
   });
 });
 

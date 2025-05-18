@@ -109,6 +109,18 @@ export default function NowPlaying(props) {
     }
   }, [props.state]);
 
+  if (isElectron) {
+    useEffect(() => {
+      electron.sendMessage(
+        JSON.stringify({
+          type: "playback-state-changed",
+          state: playbackState,
+          queue
+        })
+      );
+    }, [queue]);
+  }
+
   function handleTimeUpdate(e) {
     const newTime = e / 1000;
     setPlaybackState((prevState) => ({
