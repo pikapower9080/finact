@@ -104,6 +104,13 @@ const apiDocs = {
   "/basicQueue": "Returns the queue with basic item info"
 };
 
+server.use((_, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 server.get("/", (req, res) => {
   res.json(apiDocs);
 });
