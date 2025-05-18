@@ -3,20 +3,20 @@ import Icon from "./Icon";
 import { getStorage } from "../storage";
 import { getUser, GlobalState } from "../App";
 import { jellyfinRequest } from "../Util/Network";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import copy from "copy-to-clipboard";
 import { playItem } from "../Util/Helpers";
-import { infoNotification } from "../Util/Toaster";
+import { errorNotification, infoNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
 export default function ItemContextMenu({ item, menuButton, type }) {
-  const { loading, setLoading, setAddToPlaylistItem } = useContext(GlobalState);
-  const { setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
+  const { setLoading, setAddToPlaylistItem, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
-  const menuCategories = [];
+  const [isFavorite, setIsFavorite] = useState(item.UserData?.IsFavorite || false);
 
+  const menuCategories = [];
   let playbackCategory = [];
 
   if (type !== "queue" && type !== "now-playing") {
@@ -88,6 +88,23 @@ export default function ItemContextMenu({ item, menuButton, type }) {
         setAddToPlaylistItem(item);
       }
     });
+    if (item.UserData && "IsFavorite" in item.UserData) {
+      generalCategory.push({
+        icon: isFavorite ? "favorite_border" : "favorite",
+        label: isFavorite ? "Unfavorite" : "Favorite",
+        action: async () => {
+          try {
+            await jellyfinRequest(`/Users/${getUser().Id}/FavoriteItems/${item.Id}`, {
+              method: isFavorite ? "DELETE" : "POST"
+            });
+            setIsFavorite(!isFavorite);
+          } catch (err) {
+            console.error(err);
+            toaster.push(errorNotification("Error", `Failed to ${isFavorite ? "add to" : "remove from"} favorites`));
+          }
+        }
+      });
+    }
     menuCategories.push(generalCategory);
     const advancedCategory = [];
     if (user.Policy.EnableContentDownloading) {

@@ -403,9 +403,6 @@ export default function NowPlaying(props) {
                     <Icon icon={volume > 66 ? "volume_up" : volume > 33 ? "volume_down" : "volume_mute"} noSpace />
                   </Button>
                 </Whisper>
-                <Button className="square" appearance="subtle" title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`} onClick={() => {}}>
-                  <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
-                </Button>
                 <ItemContextMenu
                   item={props.state.item}
                   type="now-playing"
