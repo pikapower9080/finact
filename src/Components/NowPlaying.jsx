@@ -1,4 +1,4 @@
-import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text, Footer } from "rsuite";
+import { Avatar, Button, ButtonGroup, FlexboxGrid, HStack, VStack, Navbar, Text, Footer, Whisper, Popover, Slider } from "rsuite";
 import { getStorage } from "../storage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getUser, GlobalState } from "../App";
@@ -20,6 +20,7 @@ export default function NowPlaying(props) {
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
+  const [volume, setVolume] = useState(100);
   const isScrubbing = useRef(false);
 
   let visualizerSupported = useRef(false);
@@ -35,6 +36,10 @@ export default function NowPlaying(props) {
   }
 
   useEffect(() => {
+    audioRef.current.volume = volume / 100;
+  }, [volume]);
+
+  useEffect(() => {
     if (audioRef.current) {
       if (props.state.playing) {
         audioRef.current.play();
@@ -48,7 +53,7 @@ export default function NowPlaying(props) {
               IsPaused: false,
               IsMuted: false,
               PositionTicks: 0,
-              VolumeLevel: 100
+              VolumeLevel: volume
             }),
             headers: {
               "Content-Type": "application/json"
@@ -136,7 +141,7 @@ export default function NowPlaying(props) {
         IsPaused: !props.state.playing,
         IsMuted: false,
         PositionTicks: Math.floor(position * 10000),
-        VolumeLevel: 100
+        VolumeLevel: volume
       }),
       headers: {
         "Content-Type": "application/json"
@@ -180,7 +185,7 @@ export default function NowPlaying(props) {
         IsPaused: false,
         IsMuted: false,
         PositionTicks: Math.floor(position * 10000),
-        VolumeLevel: 100
+        VolumeLevel: volume
       }),
       headers: {
         "Content-Type": "application/json"
@@ -203,7 +208,7 @@ export default function NowPlaying(props) {
         IsPaused: true,
         IsMuted: false,
         PositionTicks: Math.floor(position * 10000),
-        VolumeLevel: 100
+        VolumeLevel: volume
       }),
       headers: {
         "Content-Type": "application/json"
@@ -385,6 +390,19 @@ export default function NowPlaying(props) {
                     <Icon icon={"lyrics"} noSpace />
                   </Button>
                 )}
+                <Whisper
+                  placement="top"
+                  trigger="click"
+                  speaker={
+                    <Popover style={{ width: 200 }}>
+                      <Slider progress renderTooltip={() => volume + "%"} defaultValue={100} value={volume} onChange={setVolume} />
+                    </Popover>
+                  }
+                >
+                  <Button className="square" appearance="subtle" title="Volume">
+                    <Icon icon={volume > 66 ? "volume_up" : volume > 33 ? "volume_down" : "volume_mute"} noSpace />
+                  </Button>
+                </Whisper>
                 <Button className="square" appearance="subtle" title={`${props.state.item.UserData.IsFavorite ? "Remove from" : "Add to"} favorites`} onClick={() => {}}>
                   <Icon icon={"favorite"} noSpace className={props.state.item.UserData.IsFavorite && "red-400"} />
                 </Button>
