@@ -97,6 +97,16 @@ export default function NowPlaying(props) {
         document.title = "Finact";
       }
     }
+
+    if (isElectron) {
+      electron.sendMessage(
+        JSON.stringify({
+          type: "playback-state-changed",
+          state: playbackState,
+          queue
+        })
+      );
+    }
   }, [props.state]);
 
   function handleTimeUpdate(e) {
@@ -126,6 +136,14 @@ export default function NowPlaying(props) {
     const interval = setInterval(() => {
       if (audioRef.current && !isScrubbing.current) {
         setPosition(audioRef.current.currentTime * 1000);
+        if (isElectron) {
+          electron.sendMessage(
+            JSON.stringify({
+              type: "playback-progress",
+              position: audioRef.current.currentTime
+            })
+          );
+        }
       }
     }, 500);
     if (audioRef.current && !isScrubbing.current) {
