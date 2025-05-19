@@ -393,6 +393,7 @@ export default function NowPlaying(props) {
                 <Whisper
                   placement="top"
                   trigger="click"
+                  preventOverflow={true}
                   speaker={
                     <Popover style={{ width: 200 }}>
                       <Slider progress renderTooltip={() => volume + "%"} defaultValue={100} value={volume} onChange={setVolume} />
