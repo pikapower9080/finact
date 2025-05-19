@@ -154,6 +154,7 @@ export default function NowPlaying(props) {
       if (audioRef.current && !isScrubbing.current) {
         setPosition(audioRef.current.currentTime * 1000);
         if (isElectron) {
+          if (!playbackState.playing) return;
           electron.sendMessage(
             JSON.stringify({
               type: "playback-progress",

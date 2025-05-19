@@ -75,7 +75,7 @@ ipcMain.on("message-from-renderer", async (event, data) => {
         });
         break;
       case "playback-progress":
-        if (playbackState.state) {
+        if (playbackState.state && playbackState.state.playing) {
           playbackState.state.position = data.position;
           connectedSockets.forEach((socket) => {
             if (socket && socket.readyState === 1) {
