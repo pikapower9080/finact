@@ -50,11 +50,15 @@ function App() {
       if (user) {
         const savedState = await localforage.getItem("playbackState");
         const savedQueue = await localforage.getItem("queue");
+        const savedPosition = await localforage.getItem("position");
         let restoredState = false;
         let restoredQueue = false;
         if (savedState) {
           if ("playing" in savedState) {
             savedState.playing = false;
+          }
+          if (savedPosition) {
+            savedState.position = savedPosition / 1000;
           }
           setPlaybackState(savedState);
           console.log("Restoring playback state");

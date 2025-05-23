@@ -13,6 +13,7 @@ const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
 import { isElectron } from "../Util/Helpers";
+import localforage from "localforage";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
@@ -162,6 +163,7 @@ export default function NowPlaying(props) {
             })
           );
         }
+        localforage.setItem("position", audioRef.current.currentTime * 1000);
       }
     }, 500);
     if (audioRef.current && !isScrubbing.current) {
