@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import Store from "electron-store";
 import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
 import expressWs from "express-ws";
 
@@ -8,7 +9,8 @@ const config = new Store();
 const server = express();
 expressWs(server);
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let win;
 let playbackState = {
