@@ -58,6 +58,12 @@ app.whenReady().then(() => {
   });
 });
 
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin" && !process.env.NODE_ENV == "dev") {
+    app.quit();
+  }
+});
+
 ipcMain.on("message-from-renderer", async (event, data) => {
   data = JSON.parse(data);
   if (data.type) {
@@ -67,28 +73,18 @@ ipcMain.on("message-from-renderer", async (event, data) => {
         break;
       case "playback-state-changed":
         playbackState = { state: data.state, queue: data.queue };
-        connectedSockets.forEach((socket) => {
-          socket.send(
-            JSON.stringify({
-              type: "playback-state",
-              state: playbackState.state,
-              queue: playbackState.queue
-            })
-          );
+        broadcastMessage({
+          type: "playback-state",
+          state: playbackState.state,
+          queue: playbackState.queue
         });
         break;
       case "playback-progress":
         if (playbackState.state && playbackState.state.playing) {
           playbackState.state.position = data.position;
-          connectedSockets.forEach((socket) => {
-            if (socket && socket.readyState === 1) {
-              socket.send(
-                JSON.stringify({
-                  type: "playback-progress",
-                  position: playbackState.state.position
-                })
-              );
-            }
+          broadcastMessage({
+            type: "playback-progress",
+            position: playbackState.state.position
           });
         }
         break;
@@ -165,11 +161,13 @@ server.ws("/", (ws, req) => {
   });
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin" && !process.env.NODE_ENV == "dev") {
-    app.quit();
-  }
-});
+function broadcastMessage(message) {
+  connectedSockets.forEach((socket) => {
+    if (socket && socket.readyState === 1) {
+      socket.send(JSON.stringify(message));
+    }
+  });
+}
 
 server.listen(8514, "0.0.0.0", (error) => {
   if (error) {
