@@ -56,7 +56,7 @@ export default function Playlists() {
           </Grid>
         </>
       ) : (
-        <Fallback icon={errorIcon} text={error} />
+        error && <Fallback icon={errorIcon} text={error} />
       )}
     </>
   );
