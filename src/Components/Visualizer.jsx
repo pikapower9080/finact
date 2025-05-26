@@ -17,21 +17,14 @@ export default function Visualizer(props) {
   let presets = useRef(null);
 
   useEffect(() => {
+    const audioContext = props.audioContextRef.current;
+    const gainNode = props.gainNodeRef.current;
     let closing = false;
-    const audioContext = new AudioContext();
     setLoading(true);
     async function setup() {
       const butterchurn = (await import("butterchurn")).default;
       const butterchurnPresets = (await import("butterchurn-presets")).default;
       presets.current = butterchurnPresets.getPresets();
-
-      const streamNode = audioContext.createMediaStreamSource(props.audioRef.current.captureStream());
-      props.audioRef.current.muted = true;
-
-      const gainNode = audioContext.createGain();
-
-      streamNode.connect(gainNode);
-      gainNode.connect(audioContext.destination);
 
       const visualizer = butterchurn.createVisualizer(audioContext, canvasRef.current, {
         width: window.innerWidth,
@@ -63,8 +56,6 @@ export default function Visualizer(props) {
 
     return () => {
       closing = true;
-      props.audioRef.current.muted = false;
-      audioContext.close();
     };
   }, []);
 

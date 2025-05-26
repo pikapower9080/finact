@@ -27,7 +27,7 @@ export default function NowPlaying(props) {
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);
 
-  if (visualizerSupported.current == false && isButterchurnSupported() && "captureStream" in new Audio()) {
+  if (visualizerSupported.current == false && isButterchurnSupported()) {
     visualizerSupported.current = true;
   }
 
@@ -36,12 +36,38 @@ export default function NowPlaying(props) {
     return artistNames.length > 29 ? `${artistNames.slice(0, 29)}...` : artistNames;
   }
 
+  const audioContextRef = useRef(null);
+  const gainNodeRef = useRef(null);
+
+  useEffect(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    const audio = audioRef.current;
+    if (audio && !audio.sourceNode) {
+      const source = audioContextRef.current.createMediaElementSource(audio);
+      const gainNode = audioContextRef.current.createGain();
+      gainNode.gain.value = 1;
+      source.connect(gainNode);
+      gainNodeRef.current = gainNode;
+      gainNode.connect(audioContextRef.current.destination);
+      source.connect(audioContextRef.current.destination);
+      audio.sourceNode = source; // avoid multiple connections
+    }
+  }, []);
+
   useEffect(() => {
     audioRef.current.volume = volume / 100;
   }, [volume]);
 
   useEffect(() => {
     if (audioRef.current) {
+      if (props.state.item && props.state.item.NormalizationGain && gainNodeRef.current) {
+        gainNodeRef.current.gain.value = Math.pow(10, props.state.item.NormalizationGain / 20);
+      } else {
+        gainNodeRef.current.gain.value = 1;
+      }
       if (props.state.playing) {
         audioRef.current.play();
         if (props.state.position == 0) {
@@ -278,7 +304,7 @@ export default function NowPlaying(props) {
           next();
         }}
       />
-      {visualizerOpen ? <Visualizer audioRef={audioRef} /> : <></>}
+      {visualizerOpen ? <Visualizer audioContextRef={audioContextRef} gainNodeRef={gainNodeRef} /> : <></>}
       {lyricsOpen && <Lyrics lyrics={fetchedLyrics.current} state={props.state} position={position} />}
       <Footer className={(lyricsOpen || visualizerOpen) && "footer-overlay"}>
         <Navbar className="now-playing" style={{ flexBasis: 0 }}>
