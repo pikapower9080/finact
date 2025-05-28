@@ -60,6 +60,9 @@ export default function ItemContextMenu({ item, menuButton, type, controlled, st
             }
           }
           setQueue((prevQueue) => {
+            if (!prevQueue || !prevQueue.items) {
+              return { items: [item], index: 0 };
+            }
             const newQueue = prevQueue ? { ...prevQueue, items: [...prevQueue.items, item] } : { items: [item], index: 0 };
             return newQueue;
           });
