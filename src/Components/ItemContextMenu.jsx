@@ -1,4 +1,4 @@
-import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
+import { ControlledMenu, Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getStorage } from "../storage";
 import { getUser, GlobalState } from "../App";
@@ -10,7 +10,26 @@ import { errorNotification, infoNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
-export default function ItemContextMenu({ item, menuButton, type }) {
+function getMenuContents(menuCategories) {
+  return menuCategories.map((category, index) => (
+    <div key={index}>
+      {index > 0 && <MenuDivider />}
+      {category.map((item, itemIndex) => (
+        <MenuItem
+          key={itemIndex}
+          onClick={(e) => {
+            item.action();
+          }}
+        >
+          <Icon icon={item.icon} />
+          {item.label}
+        </MenuItem>
+      ))}
+    </div>
+  ));
+}
+
+export default function ItemContextMenu({ item, menuButton, type, controlled, state, anchorPoint, onClose }) {
   const { setLoading, setAddItem, setAddItemType, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
@@ -177,24 +196,13 @@ export default function ItemContextMenu({ item, menuButton, type }) {
     menuCategories.push([{ icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) }]);
   }
 
-  return (
+  return controlled ? (
+    <ControlledMenu menuButton={menuButton} state={state} anchorPoint={anchorPoint} onClose={onClose} align="start" transition theming="dark" onClick={(e) => e.stopPropagation()}>
+      {getMenuContents(menuCategories)}
+    </ControlledMenu>
+  ) : (
     <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
-      {menuCategories.map((category, index) => (
-        <div key={index}>
-          {index > 0 && <MenuDivider />}
-          {category.map((item, itemIndex) => (
-            <MenuItem
-              key={itemIndex}
-              onClick={(e) => {
-                item.action();
-              }}
-            >
-              <Icon icon={item.icon} />
-              {item.label}
-            </MenuItem>
-          ))}
-        </div>
-      ))}
+      {getMenuContents(menuCategories)}
     </Menu>
   );
 }

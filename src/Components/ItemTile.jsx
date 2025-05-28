@@ -2,6 +2,8 @@ import { Col, Image, Text } from "rsuite";
 import { getStorage } from "../storage";
 import { Blurhash } from "react-blurhash";
 import { getAlbumArt } from "../Util/Formatting";
+import ItemContextMenu from "./ItemContextMenu";
+import { useState } from "react";
 
 const storage = getStorage();
 
@@ -35,22 +37,38 @@ const contentStyle = {
 };
 
 export default function ItemTile(props) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [anchorPoint, setAnchorPoint] = useState(null);
+
   return (
-    <Col key={props.item.Id} {...getColSize()} style={{ marginBottom: 5 }} {...props.tileProps}>
-      <div style={squareStyle}>
-        <div style={contentStyle}>
-          {typeof props.item.ImageBlurHashes == "object" && "ImageBlurHashes" in props.item && "Primary" in props.item.ImageBlurHashes && <Blurhash hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />}
-          <Image
-            style={{ visibility: "hidden", position: "absolute", backgroundColor: "var(--rs-body)" }}
-            onLoad={(e) => {
-              e.target.style.visibility = "visible";
-            }}
-            draggable={false}
-            src={props.item.Type == "Audio" ? getAlbumArt(props.item) : `${storage.get("serverURL")}/Items/${props.item.Id}/Images/Primary`}
-          />
+    <>
+      <ItemContextMenu controlled state={menuOpen ? "open" : "closed"} onClose={() => setMenuOpen(false)} anchorPoint={anchorPoint} item={props.item} />
+      <Col
+        key={props.item.Id}
+        {...getColSize()}
+        style={{ marginBottom: 5 }}
+        {...props.tileProps}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setMenuOpen(true);
+          setAnchorPoint({ x: e.clientX, y: e.clientY });
+        }}
+      >
+        <div style={squareStyle}>
+          <div style={contentStyle}>
+            {typeof props.item.ImageBlurHashes == "object" && "ImageBlurHashes" in props.item && "Primary" in props.item.ImageBlurHashes && <Blurhash hash={props.item.ImageBlurHashes.Primary[Object.keys(props.item.ImageBlurHashes.Primary)[0]]} width={"100%"} height={"100%"} />}
+            <Image
+              style={{ visibility: "hidden", position: "absolute", backgroundColor: "var(--rs-body)" }}
+              onLoad={(e) => {
+                e.target.style.visibility = "visible";
+              }}
+              draggable={false}
+              src={props.item.Type == "Audio" ? getAlbumArt(props.item) : `${storage.get("serverURL")}/Items/${props.item.Id}/Images/Primary`}
+            />
+          </div>
         </div>
-      </div>
-      <Text style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textAlign: "center" }}>{props.item.Name}</Text>
-    </Col>
+        <Text style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textAlign: "center" }}>{props.item.Name}</Text>
+      </Col>
+    </>
   );
 }
