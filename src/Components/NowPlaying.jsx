@@ -24,6 +24,7 @@ export default function NowPlaying(props) {
   const [volume, setVolume] = useState(100);
   const [repeat, setRepeat] = useState("none");
   const isScrubbing = useRef(false);
+  const restoredVolume = useRef(false);
 
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);
@@ -41,6 +42,20 @@ export default function NowPlaying(props) {
   const gainNodeRef = useRef(null);
 
   useEffect(() => {
+    (async () => {
+      const savedRepeat = await localforage.getItem("repeat");
+      const savedVolume = await localforage.getItem("volume");
+
+      if (savedRepeat && ["none", "all", "one"].includes(savedRepeat)) {
+        setRepeat(savedRepeat);
+      }
+      console.log(savedVolume);
+      if (savedVolume && typeof savedVolume === "number" && savedVolume >= 0 && savedVolume <= 100) {
+        setVolume(savedVolume);
+      }
+      restoredVolume.current = true;
+    })();
+
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -200,6 +215,13 @@ export default function NowPlaying(props) {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    if (restoredVolume.current) {
+      localforage.setItem("volume", volume);
+    }
+    localforage.setItem("repeat", repeat);
+  }, [volume, repeat]);
 
   function play() {
     setPlaybackState((prevState) => ({
