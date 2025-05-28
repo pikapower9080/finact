@@ -17,6 +17,8 @@ import Search from "./Routes/Search";
 import AddItem from "./Components/AddItem";
 import Queue from "./Routes/Queue";
 import localforage from "localforage";
+import { isElectron, playItem } from "./Util/Helpers";
+import { jellyfinRequest } from "./Util/Network";
 
 const storage = getStorage();
 
@@ -40,11 +42,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [addItem, setAddItem] = useState(null);
   const [addItemType, setAddItemType] = useState(null);
+  const [lastCommand, setLastCommand] = useState(null);
   const queueAndStateInitialized = useRef(false);
 
   const toaster = useToaster();
 
-  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addItem, setAddItem, addItemType, setAddItemType, queue, setQueue };
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addItem, setAddItem, addItemType, setAddItemType, queue, setQueue, lastCommand, setLastCommand };
 
   useEffect(() => {
     (async () => {
@@ -93,6 +96,13 @@ function App() {
         }
       }
     })();
+
+    if (isElectron) {
+      window.electron.onCommand(async (command) => {
+        const data = JSON.parse(command);
+        setLastCommand({ ...data, timestamp: Date.now() });
+      });
+    }
   }, []);
 
   useEffect(() => {

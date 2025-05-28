@@ -155,6 +155,100 @@ server.ws("/", (ws, req) => {
       queue: playbackState.queue
     })
   );
+  ws.on("message", (msg) => {
+    try {
+      const data = JSON.parse(msg);
+      switch (data.command) {
+        case "play-item":
+          if (data.itemId) {
+            win.webContents.send("command-to-renderer", JSON.stringify({ type: "play-item", itemId: data.itemId }));
+          } else {
+            console.warn("Received play command without itemId");
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "play command requires itemId"
+              })
+            );
+          }
+          break;
+        case "pause":
+          win.webContents.send("command-to-renderer", JSON.stringify({ type: "pause" }));
+          break;
+        case "resume":
+          win.webContents.send("command-to-renderer", JSON.stringify({ type: "resume" }));
+          break;
+        case "stop":
+          win.webContents.send("command-to-renderer", JSON.stringify({ type: "stop" }));
+          break;
+        case "next":
+          win.webContents.send("command-to-renderer", JSON.stringify({ type: "next" }));
+          break;
+        case "previous":
+          win.webContents.send("command-to-renderer", JSON.stringify({ type: "previous" }));
+          break;
+        case "set-volume":
+          if (typeof data.volume === "number") {
+            win.webContents.send("command-to-renderer", JSON.stringify({ type: "set-volume", volume: data.volume }));
+          } else {
+            console.warn("Received set-volume command without valid volume");
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "set-volume command requires a valid volume number"
+              })
+            );
+          }
+          break;
+        case "seek":
+          if (typeof data.position === "number") {
+            win.webContents.send("command-to-renderer", JSON.stringify({ type: "seek", position: data.position }));
+          } else {
+            console.warn("Received seek command without valid position");
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "seek command requires a valid position number"
+              })
+            );
+          }
+          break;
+        case "set-repeat":
+          if (["none", "all", "one"].includes(data.mode)) {
+            win.webContents.send("command-to-renderer", JSON.stringify({ type: "set-repeat", mode: data.mode }));
+          } else {
+            console.warn("Received set-repeat command with invalid mode: ", data.mode);
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "set-repeat command requires a valid mode (none, all, one)"
+              })
+            );
+          }
+          break;
+        case "quit":
+          app.quit();
+          break;
+        default:
+          console.warn("Received unknown command: ", data.command);
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: `Unknown command type`
+            })
+          );
+          break;
+      }
+    } catch (error) {
+      console.error("Error parsing message: ", error);
+      ws.send(
+        JSON.stringify({
+          type: "error",
+          message: "Invalid message format"
+        })
+      );
+    }
+  });
   ws.on("close", () => {
     console.log(`WebSocket connection ${index} closed`);
     delete connectedSockets[index];

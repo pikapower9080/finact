@@ -12,12 +12,12 @@ import "react-scrubber/lib/scrubber.css";
 const storage = getStorage();
 import isButterchurnSupported from "butterchurn/lib/isSupported.min";
 import Lyrics from "./Lyrics";
-import { isElectron } from "../Util/Helpers";
+import { isElectron, playItem } from "../Util/Helpers";
 import localforage from "localforage";
 
 export default function NowPlaying(props) {
   const audioRef = useRef(null);
-  const { playbackState, setPlaybackState, queue, setQueue } = useContext(GlobalState);
+  const { playbackState, setPlaybackState, queue, setQueue, lastCommand } = useContext(GlobalState);
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
@@ -222,6 +222,67 @@ export default function NowPlaying(props) {
     }
     localforage.setItem("repeat", repeat);
   }, [volume, repeat]);
+
+  useEffect(() => {
+    (async () => {
+      const type = lastCommand?.type;
+      switch (type) {
+        case "play-item":
+          const itemData = await jellyfinRequest(`/Items/${lastCommand.itemId}`);
+          if (!["Audio", "MusicAlbum", "Playlist"].includes(itemData.Type)) {
+            console.warn("Received play command for invalid item type " + itemData.Type);
+            return;
+          }
+          if (itemData.Type == "Audio") {
+            playItem(setPlaybackState, setQueue, itemData);
+          }
+          if (itemData.Type == "MusicAlbum" || itemData.Type == "Playlist") {
+            const items = (await jellyfinRequest(`/Items?ParentId=${itemData.Id}${itemData.Type == "MusicAlbum" ? "&SortBy=IndexNumber" : ""}`))?.Items;
+            if (items && items.length > 0) {
+              playItem(setPlaybackState, setQueue, items[0], items);
+            } else {
+              console.warn("Received play command for empty album/playlist");
+            }
+          }
+          break;
+        case "pause":
+          pause();
+          break;
+        case "resume":
+          play();
+          break;
+        case "stop":
+          setPlaybackState(null);
+          setQueue(null);
+          break;
+        case "next":
+          next();
+          break;
+        case "previous":
+          previous();
+          break;
+        case "set-volume":
+          if (typeof lastCommand.volume === "number" && lastCommand.volume >= 0 && lastCommand.volume <= 100) {
+            setVolume(lastCommand.volume);
+          }
+          break;
+        case "seek":
+          if (typeof lastCommand.position === "number") {
+            setPlaybackState((prevState) => ({
+              ...prevState,
+              position: lastCommand.position
+            }));
+            setPosition(lastCommand.position * 1000);
+          }
+          break;
+        case "set-repeat":
+          setRepeat(lastCommand.mode);
+          break;
+        default:
+          break;
+      }
+    })();
+  }, [lastCommand]);
 
   function play() {
     setPlaybackState((prevState) => ({
