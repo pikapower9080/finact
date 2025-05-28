@@ -50,6 +50,7 @@ export default function ItemTile(props) {
         {...props.tileProps}
         onContextMenu={(e) => {
           e.preventDefault();
+          if (props.item.Type === "BoxSet") return;
           setMenuOpen(true);
           setAnchorPoint({ x: e.clientX, y: e.clientY });
         }}
