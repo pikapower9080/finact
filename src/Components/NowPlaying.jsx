@@ -22,6 +22,7 @@ export default function NowPlaying(props) {
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const [volume, setVolume] = useState(100);
+  const [repeat, setRepeat] = useState("none");
   const isScrubbing = useRef(false);
 
   let visualizerSupported = useRef(false);
@@ -248,6 +249,20 @@ export default function NowPlaying(props) {
   function next() {
     if (queue && queue.items && queue.items.length > 0) {
       if (queue.index == queue.items.length - 1) {
+        if (repeat === "all") {
+          // loop back to the first song
+          const firstItem = queue.items[0];
+          setPlaybackState({
+            item: firstItem,
+            playing: true,
+            position: 0
+          });
+          setQueue({
+            items: queue.items,
+            index: 0
+          });
+          return;
+        }
         // end playback on the last song
         setPlaybackState(null);
         return;
@@ -301,7 +316,15 @@ export default function NowPlaying(props) {
         src={`${storage.get("serverURL")}/Audio/${props.state.item.Id}/Universal?itemId=${props.state.item.Id}&deviceId=${storage.get("DeviceId")}&userId=${getUser().Id}&Container=opus,webm|opus,ts|mp3,mp3,aac,m4a|aac,m4b|aac,flac,webma,webm|webma,wav,ogg&api_key=${storage.get("AccessToken")}`}
         playsInline={true}
         onEnded={(e) => {
-          next();
+          if (repeat === "one") {
+            setPlaybackState((prevState) => ({
+              ...prevState,
+              position: 0
+            }));
+            return;
+          } else {
+            next();
+          }
         }}
       />
       {visualizerOpen ? <Visualizer audioContextRef={audioContextRef} gainNodeRef={gainNodeRef} /> : <></>}
@@ -433,6 +456,22 @@ export default function NowPlaying(props) {
                     <Icon icon={volume > 66 ? "volume_up" : volume > 33 ? "volume_down" : "volume_mute"} noSpace />
                   </Button>
                 </Whisper>
+                <Button
+                  className="square"
+                  appearance="subtle"
+                  title="Repeat"
+                  onClick={() => {
+                    if (repeat == "none") {
+                      setRepeat("all");
+                    } else if (repeat == "all") {
+                      setRepeat("one");
+                    } else {
+                      setRepeat("none");
+                    }
+                  }}
+                >
+                  <Icon icon={repeat == "one" ? "repeat_one" : "repeat"} style={{ color: repeat !== "none" ? "var(--rs-primary-600)" : "unset" }} noSpace />
+                </Button>
                 <ItemContextMenu
                   item={props.state.item}
                   type="now-playing"
