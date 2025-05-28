@@ -14,7 +14,7 @@ import NotFound from "./Routes/NotFound";
 import Playlist from "./Routes/Playlists/[id]";
 import Album from "./Routes/Albums/[id]";
 import Search from "./Routes/Search";
-import AddToPlaylist from "./Components/AddToPlaylist";
+import AddItem from "./Components/AddItem";
 import Queue from "./Routes/Queue";
 import localforage from "localforage";
 
@@ -38,12 +38,13 @@ function App() {
   const [playbackState, setPlaybackState] = useState(null);
   const [queue, setQueue] = useState({});
   const [loading, setLoading] = useState(false);
-  const [addToPlaylistItem, setAddToPlaylistItem] = useState(null);
+  const [addItem, setAddItem] = useState(null);
+  const [addItemType, setAddItemType] = useState(null);
   const queueAndStateInitialized = useRef(false);
 
   const toaster = useToaster();
 
-  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addToPlaylistItem, setAddToPlaylistItem, queue, setQueue };
+  const globalState = { playbackState, setPlaybackState, loading, setLoading, toaster, addItem, setAddItem, addItemType, setAddItemType, queue, setQueue };
 
   useEffect(() => {
     (async () => {
@@ -116,7 +117,7 @@ function App() {
               <SignIn setUser={setUser} />
             ) : (
               <>
-                <AddToPlaylist item={addToPlaylistItem} />
+                <AddItem item={addItem} type={addItemType} />
                 <HashRouter>
                   <Routes>
                     <Route path="/" element={<Home />} />

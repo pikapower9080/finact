@@ -2,7 +2,7 @@ import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
 import { getStorage } from "../storage";
 import { getUser, GlobalState } from "../App";
-import { jellyfinRequest } from "../Util/Network";
+import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { useContext, useState } from "react";
 import copy from "copy-to-clipboard";
 import { playItem } from "../Util/Helpers";
@@ -11,7 +11,7 @@ import { errorNotification, infoNotification } from "../Util/Toaster";
 const storage = getStorage();
 
 export default function ItemContextMenu({ item, menuButton, type }) {
-  const { setLoading, setAddToPlaylistItem, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
+  const { setLoading, setAddItem, setAddItemType, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
   const [isFavorite, setIsFavorite] = useState(item.UserData?.IsFavorite || false);
@@ -85,7 +85,8 @@ export default function ItemContextMenu({ item, menuButton, type }) {
       icon: "playlist_add",
       label: "Add to Playlist",
       action: () => {
-        setAddToPlaylistItem(item);
+        setAddItemType("playlist");
+        setAddItem(item);
       }
     });
     if (item.UserData && "IsFavorite" in item.UserData) {
@@ -147,15 +148,26 @@ export default function ItemContextMenu({ item, menuButton, type }) {
   }
 
   if (item.Type === "MusicAlbum" || item.Type === "Playlist") {
-    menuCategories.push([
-      {
-        icon: "playlist_add",
-        label: "Add to Playlist",
-        action: () => {
-          setAddToPlaylistItem(item);
-        }
+    const addCategory = [];
+    addCategory.push({
+      icon: "playlist_add",
+      label: "Add to Playlist",
+      action: () => {
+        setAddItemType("playlist");
+        setAddItem(item);
       }
-    ]);
+    });
+    if (item.Type === "MusicAlbum") {
+      addCategory.push({
+        icon: "add_to_photos",
+        label: "Add to Collection",
+        action: () => {
+          setAddItemType("collection");
+          setAddItem(item);
+        }
+      });
+    }
+    menuCategories.push(addCategory);
   }
 
   if (item.Type === "MusicAlbum") {

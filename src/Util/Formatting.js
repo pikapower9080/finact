@@ -86,3 +86,11 @@ export function getPWADisplayMode() {
 
   return "unknown";
 }
+
+export function pluralize(amount, singular, plural) {
+  if (amount === 1) {
+    return singular;
+  } else {
+    return plural || `${singular}s`;
+  }
+}
