@@ -3,9 +3,14 @@
     "Blurhash",
     "Butterchurn",
     "finact",
+    "flac",
     "jellyfin",
+    "nexttrack",
+    "previoustrack",
     "rsuite",
-    "szhsin"
+    "seekto",
+    "szhsin",
+    "webma"
   ],
   "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",

@@ -88,6 +88,15 @@ ipcMain.on("message-from-renderer", async (event, data) => {
           });
         }
         break;
+      case "playback-options-changed":
+        playbackState.state.repeat = data.repeat;
+        playbackState.state.volume = data.volume;
+        broadcastMessage({
+          type: "playback-options",
+          repeat: playbackState.state.repeat,
+          volume: playbackState.state.volume
+        });
+        break;
       default:
         console.warn("Received message of unknown type: ", data.type);
         break;
