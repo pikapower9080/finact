@@ -292,6 +292,9 @@ export default function NowPlaying(props) {
   }, [lastCommand]);
 
   function play() {
+    if (!audioRef.current || !playbackState || !playbackState.item) {
+      return;
+    }
     setPlaybackState((prevState) => ({
       ...prevState,
       playing: true
@@ -314,6 +317,9 @@ export default function NowPlaying(props) {
   }
 
   function pause() {
+    if (!audioRef.current || !playbackState || !playbackState.item) {
+      return;
+    }
     setPlaybackState((prevState) => ({
       ...prevState,
       position: audioRef.current.currentTime,
@@ -337,6 +343,7 @@ export default function NowPlaying(props) {
   }
 
   function next() {
+    if (!audioRef.current) return;
     if (queue && queue.items && queue.items.length > 0) {
       if (queue.index == queue.items.length - 1) {
         if (repeat === "all") {
@@ -373,6 +380,7 @@ export default function NowPlaying(props) {
   }
 
   function previous() {
+    if (!audioRef.current) return;
     if (queue && audioRef.current.currentTime < 4) {
       if (queue.index == 0) {
         // end playback on the first song
