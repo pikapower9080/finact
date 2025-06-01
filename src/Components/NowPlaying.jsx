@@ -383,8 +383,10 @@ export default function NowPlaying(props) {
     if (!audioRef.current) return;
     if (queue && audioRef.current.currentTime < 4) {
       if (queue.index == 0) {
-        // end playback on the first song
-        setPlaybackState(null);
+        setPlaybackState((prevState) => ({
+          ...prevState,
+          position: 0
+        }));
         return;
       }
       const prevItem = queue.items[queue.index - 1];
