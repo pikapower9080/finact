@@ -221,13 +221,15 @@ export default function NowPlaying(props) {
       localforage.setItem("volume", volume);
     }
     localforage.setItem("repeat", repeat);
-    electron.sendMessage(
-      JSON.stringify({
-        type: "playback-options-changed",
-        repeat,
-        volume
-      })
-    );
+    if (isElectron) {
+      electron.sendMessage(
+        JSON.stringify({
+          type: "playback-options-changed",
+          repeat,
+          volume
+        })
+      );
+    }
   }, [volume, repeat]);
 
   useEffect(() => {
