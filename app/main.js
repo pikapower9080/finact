@@ -12,6 +12,10 @@ expressWs(server);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (process.platform === "linux") {
+  app.commandLine.appendSwitch("gtk-version", "3");
+}
+
 let win;
 let playbackState = {
   state: { playing: false },
