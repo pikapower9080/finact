@@ -54,7 +54,7 @@
     "mac": {
       "category": "public.app-category.music",
       "target": [
-        "zip"
+        "dmg"
       ]
     },
     "linux": {
