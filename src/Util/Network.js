@@ -26,6 +26,8 @@ export async function jellyfinRequest(url, options = {}, format = "json") {
   };
   if (format === "json") {
     return fetchJSON(`${serverURL}${url}`, options);
+  } else if (format === "none") {
+    return fetch(`${serverURL}${url}`, options);
   } else {
     const response = await fetch(`${serverURL}${url}`, options);
     if (!response.ok) {
