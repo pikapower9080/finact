@@ -132,7 +132,7 @@ export default function AddItem({ item, type }) {
                 );
                 setAddItem(null);
                 if (!response.ok) {
-                  toaster.push(errorNotification("Failed to create playlist", response.statusText));
+                  toaster.push(errorNotification("Failed to create playlist", response.statusText == "Forbidden" ? "You do not have permission to create playlists" : response.statusText));
                   const json = await response.json();
                   console.error(json);
                   return;
@@ -143,6 +143,34 @@ export default function AddItem({ item, type }) {
                   return;
                 }
                 toaster.push(successNotification("Playlist created", `${input.name} has been created successfully.`, { onClick: () => (window.location.hash = `#playlists/${responseData.Id}`), className: "pointer" }));
+              } else if (type == "collection") {
+                const query = {
+                  Name: input.name,
+                  Ids: item.Id,
+                  IsLocked: true
+                };
+                const params = new URLSearchParams();
+                for (const key in query) params.set(key, query[key]);
+                const response = await jellyfinRequest(
+                  "/Collections?" + params.toString(),
+                  {
+                    method: "POST"
+                  },
+                  "none"
+                );
+                setAddItem(null);
+                if (!response.ok) {
+                  toaster.push(errorNotification("Failed to create collection", response.statusText == "Forbidden" ? "You do not have permission to create collections" : response.statusText));
+                  const json = await response.json();
+                  console.error(json);
+                  return;
+                }
+                const responseData = await response.json();
+                if (!responseData || !responseData.Id) {
+                  toaster.push(errorNotification("Failed to create collection", "An unknown error occurred"));
+                  return;
+                }
+                toaster.push(successNotification("Collection created", `${input.name} has been created successfully.`, { onClick: () => (window.location.hash = `#collections/${responseData.Id}`), className: "pointer" }));
               }
             }}
             fluid
