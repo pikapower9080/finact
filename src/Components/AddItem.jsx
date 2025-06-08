@@ -113,6 +113,10 @@ export default function AddItem({ item, type }) {
               if (input.public && input.public.length > 0) {
                 isPublic = input.public.includes(1);
               }
+              let isLocked = false;
+              if (input.locked && input.locked.length > 0) {
+                isLocked = input.locked.includes(1);
+              }
               if (type == "playlist") {
                 const response = await jellyfinRequest(
                   "/Playlists",
@@ -147,7 +151,7 @@ export default function AddItem({ item, type }) {
                 const query = {
                   Name: input.name,
                   Ids: item.Id,
-                  IsLocked: true
+                  IsLocked: isLocked
                 };
                 const params = new URLSearchParams();
                 for (const key in query) params.set(key, query[key]);
@@ -178,12 +182,19 @@ export default function AddItem({ item, type }) {
             <Modal.Body>
               <Form.ControlLabel>Name</Form.ControlLabel>
               <Form.Control defaultValue={""} name="name" required></Form.Control>
-              {type == "playlist" && (
+              {type == "playlist" ? (
                 <>
                   <Form.Control accepter={CheckboxGroup} name="public">
                     <Checkbox value={1}>Allow Public Access</Checkbox>
                   </Form.Control>
                   <Form.HelpText>Make this playlist visible to all logged in users</Form.HelpText>
+                </>
+              ) : (
+                <>
+                  <Form.Control accepter={CheckboxGroup} name="locked">
+                    <Checkbox value={1}>Lock Collection Metadata</Checkbox>
+                  </Form.Control>
+                  <Form.HelpText>Don't search the internet for metadata and images</Form.HelpText>
                 </>
               )}
             </Modal.Body>
