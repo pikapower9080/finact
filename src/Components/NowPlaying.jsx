@@ -500,6 +500,15 @@ export default function NowPlaying(props) {
                 >
                   <Icon icon={props.state.playing ? "pause" : "play_arrow"} noSpace />
                 </Button>
+                <Button
+                  appearance="subtle"
+                  onClick={() => {
+                    setPlaybackState(null);
+                    setQueue(null);
+                  }}
+                >
+                  <Icon icon={"stop"} noSpace />
+                </Button>
                 <Button appearance="subtle" onClick={next}>
                   <Icon icon={"skip_next"} noSpace />
                 </Button>
