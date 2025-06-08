@@ -106,10 +106,49 @@ export default function AddItem({ item, type }) {
           <Modal.Header>
             <Modal.Title>Create New {type == "playlist" ? "Playlist" : "Collection"}</Modal.Title>
           </Modal.Header>
-          <Form onSubmit={console.log} fluid>
+          <Form
+            onSubmit={async (input) => {
+              if (!input.name) return;
+              let isPublic = false;
+              if (input.public && input.public.length > 0) {
+                isPublic = input.public.includes(1);
+              }
+              if (type == "playlist") {
+                const response = await jellyfinRequest(
+                  "/Playlists",
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      Name: input.name,
+                      UserId: getUser().Id,
+                      IsPublic: isPublic,
+                      Ids: [item.Id]
+                    }),
+                    headers: {
+                      "Content-Type": "application/json"
+                    }
+                  },
+                  "none"
+                );
+                if (!response.ok) {
+                  toaster.push(errorNotification("Failed to create playlist", response.statusText));
+                  const json = await response.json();
+                  console.error(json);
+                  return;
+                }
+                const responseData = await response.json();
+                if (!responseData || !responseData.Id) {
+                  toaster.push(errorNotification("Failed to create playlist", "An unknown error occurred"));
+                  return;
+                }
+                toaster.push(successNotification("Playlist created", `${input.name} has been created successfully.`, { onClick: () => (window.location.hash = `#playlists/${responseData.Id}`), className: "pointer" }));
+              }
+            }}
+            fluid
+          >
             <Modal.Body>
               <Form.ControlLabel>Name</Form.ControlLabel>
-              <Form.Control defaultValue={""} name="name"></Form.Control>
+              <Form.Control defaultValue={""} name="name" required></Form.Control>
               {type == "playlist" && (
                 <>
                   <Form.Control accepter={CheckboxGroup} name="public">
