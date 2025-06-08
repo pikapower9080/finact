@@ -130,6 +130,7 @@ export default function AddItem({ item, type }) {
                   },
                   "none"
                 );
+                setAddItem(null);
                 if (!response.ok) {
                   toaster.push(errorNotification("Failed to create playlist", response.statusText));
                   const json = await response.json();
