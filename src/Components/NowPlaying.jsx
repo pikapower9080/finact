@@ -470,7 +470,9 @@ export default function NowPlaying(props) {
               }}
             >
               <HStack spacing={10}>
-                <Avatar size="sm" src={getAlbumArt(props.state.item)} />
+                <Avatar size="sm" src={getAlbumArt(props.state.item)}>
+                  <Icon icon="album" noSpace />
+                </Avatar>
                 <div>
                   <VStack spacing={0}>
                     <Text weight="bold" className="no-select">
