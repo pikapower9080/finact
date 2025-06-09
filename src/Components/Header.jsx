@@ -6,6 +6,8 @@ import { getUser } from "../App";
 import { useMediaQuery } from "rsuite/esm/useMediaQuery/useMediaQuery";
 import { useState } from "react";
 import { isElectron } from "../Util/Helpers";
+import { jellyfinRequest } from "../Util/Network";
+import localforage from "localforage";
 
 const storage = getStorage();
 const cacheStorage = getCacheStorage();
@@ -107,9 +109,11 @@ export default function MainHeader(props) {
                   </MenuItem>
                 )}
                 <MenuItem
-                  onClick={() => {
+                  onClick={async () => {
+                    await jellyfinRequest("/Sessions/Logout", { method: "POST" }, "none");
                     storage.clearAll();
                     cacheStorage.clearAll();
+                    localforage.clear();
                     window.location.reload();
                   }}
                 >
