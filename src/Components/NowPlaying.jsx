@@ -263,8 +263,7 @@ export default function NowPlaying(props) {
           play();
           break;
         case "stop":
-          setPlaybackState(null);
-          setQueue(null);
+          stop();
           break;
         case "next":
           next();
@@ -365,7 +364,7 @@ export default function NowPlaying(props) {
           return;
         }
         // end playback on the last song
-        setPlaybackState(null);
+        stop();
         return;
       }
       const nextItem = queue.items[queue.index + 1];
@@ -379,7 +378,7 @@ export default function NowPlaying(props) {
         index: queue.index + 1
       });
     } else {
-      setPlaybackState(null);
+      stop();
     }
   }
 
@@ -409,6 +408,12 @@ export default function NowPlaying(props) {
         position: 0
       }));
     }
+  }
+
+  function stop() {
+    setPlaybackState(null);
+    setQueue(null);
+    jellyfinRequest(`/Sessions/Playing/Stopped`, { method: "POST", body: "{}", headers: { "Content-Type": "application/json" } }, "none");
   }
 
   return (
@@ -507,8 +512,7 @@ export default function NowPlaying(props) {
                 <Button
                   appearance="subtle"
                   onClick={() => {
-                    setPlaybackState(null);
-                    setQueue(null);
+                    stop();
                   }}
                 >
                   <Icon icon={"stop"} noSpace />
