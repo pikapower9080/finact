@@ -25,6 +25,7 @@ export default function NowPlaying(props) {
   const [repeat, setRepeat] = useState("none");
   const isScrubbing = useRef(false);
   const restoredVolume = useRef(false);
+  const isPlayingRef = useRef(false);
 
   let visualizerSupported = useRef(false);
   const fetchedLyrics = useRef(null);
@@ -49,7 +50,6 @@ export default function NowPlaying(props) {
       if (savedRepeat && ["none", "all", "one"].includes(savedRepeat)) {
         setRepeat(savedRepeat);
       }
-      console.log(savedVolume);
       if (savedVolume && typeof savedVolume === "number" && savedVolume >= 0 && savedVolume <= 100) {
         setVolume(savedVolume);
       }
@@ -155,6 +155,8 @@ export default function NowPlaying(props) {
         })
       );
     }
+
+    isPlayingRef.current = props.state.playing;
   }, [props.state]);
 
   if (isElectron) {
@@ -197,7 +199,7 @@ export default function NowPlaying(props) {
       if (audioRef.current && !isScrubbing.current) {
         setPosition(audioRef.current.currentTime * 1000);
         if (isElectron) {
-          if (!playbackState.playing) return;
+          if (!isPlayingRef.current) return;
           electron.sendMessage(
             JSON.stringify({
               type: "playback-progress",
