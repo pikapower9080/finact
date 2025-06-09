@@ -8,6 +8,7 @@ import { getStorage } from "../../storage";
 import Spacer from "../../Components/Spacer";
 import { ItemListEntry } from "../../Components/ItemListEntry";
 import ItemListActions from "../../Components/ItemListActions";
+import Icon from "../../Components/Icon";
 HStack;
 const storage = getStorage();
 
@@ -42,7 +43,9 @@ export default function Playlist() {
         <>
           <FlexboxGrid align="middle" justify="space-between">
             <HStack>
-              <Avatar size="md" src={`${storage.get("serverURL")}/Items/${id}/Images/Primary`} />
+              <Avatar size="md" src={`${storage.get("serverURL")}/Items/${id}/Images/Primary`}>
+                <Icon icon="playlist_play" noSpace />
+              </Avatar>
               <Heading level={3}>{data.data.Name}</Heading>
             </HStack>
             <ItemListActions s items={data.items.Items} type="playlist" parent={data.data} />

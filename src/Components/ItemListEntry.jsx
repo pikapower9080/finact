@@ -33,7 +33,11 @@ export function ItemListEntry({ item, index, type, allItems, setSortable }) {
           </div>
         )}
         {type == "album" && item.IndexNumber && <Text muted>{item.IndexNumber}</Text>}
-        {type != "album" && <Avatar src={getAlbumArt(item, 160)} />}
+        {type != "album" && (
+          <Avatar src={getAlbumArt(item, 160)}>
+            <Icon icon="album" noSpace />
+          </Avatar>
+        )}
         <VStack spacing={0}>
           <Text>{item.Name}</Text>
           {type == "album"
