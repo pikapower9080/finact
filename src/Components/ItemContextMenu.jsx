@@ -29,7 +29,7 @@ function getMenuContents(menuCategories) {
   ));
 }
 
-export default function ItemContextMenu({ item, menuButton, type, controlled, state, anchorPoint, onClose }) {
+export default function ItemContextMenu({ item, context, menuButton, type, controlled, state, anchorPoint, onClose }) {
   const { setLoading, setAddItem, setAddItemType, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
@@ -197,6 +197,37 @@ export default function ItemContextMenu({ item, menuButton, type, controlled, st
   }
   if (item.Type === "Playlist") {
     menuCategories.push([{ icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) }]);
+  }
+
+  if (item.Type === "Audio" && context?.parentType == "playlist" && context?.parentId) {
+    const playlistCategory = [];
+    playlistCategory.push({
+      icon: "playlist_remove",
+      label: "Remove from Playlist",
+      action: async () => {
+        setLoading(true);
+        try {
+          await jellyfinRequest(
+            `/Playlists/${context.parentId}/Items?EntryIds=${item.Id}`,
+            {
+              method: "DELETE"
+            },
+            "none"
+          );
+        } catch (err) {
+          console.error(err);
+          console.log(err.toString());
+          if (err.toString().includes("403")) {
+            toaster.push(errorNotification("Failed to remove item", "You don't have permission to remove items from this playlist"));
+            return;
+          }
+          toaster.push(errorNotification("Error", "Failed to remove item from playlist"));
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+    menuCategories.push(playlistCategory);
   }
 
   return controlled ? (
