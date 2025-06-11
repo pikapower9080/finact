@@ -235,7 +235,7 @@ export default function ItemContextMenu({ item, context, menuButton, type, contr
       {getMenuContents(menuCategories)}
     </ControlledMenu>
   ) : (
-    <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
+    <Menu menuButton={menuButton} portal align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
       {getMenuContents(menuCategories)}
     </Menu>
   );
