@@ -6,7 +6,7 @@ import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { useContext, useState } from "react";
 import copy from "copy-to-clipboard";
 import { playItem } from "../Util/Helpers";
-import { errorNotification, infoNotification } from "../Util/Toaster";
+import { errorNotification, infoNotification, successNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
@@ -204,27 +204,26 @@ export default function ItemContextMenu({ item, context, menuButton, type, contr
     playlistCategory.push({
       icon: "playlist_remove",
       label: "Remove from Playlist",
-      action: async () => {
+      action: () => {
         setLoading(true);
-        try {
-          await jellyfinRequest(
-            `/Playlists/${context.parentId}/Items?EntryIds=${item.Id}`,
-            {
-              method: "DELETE"
-            },
-            "none"
-          );
-        } catch (err) {
-          console.error(err);
-          console.log(err.toString());
-          if (err.toString().includes("403")) {
-            toaster.push(errorNotification("Failed to remove item", "You don't have permission to remove items from this playlist"));
+        jellyfinRequest(
+          `/Playlists/${context.parentId}/Items?EntryIds=${item.Id}`,
+          {
+            method: "DELETE"
+          },
+          "none"
+        ).then((response) => {
+          if (!response.ok) {
+            if (response.status === 403) {
+              toaster.push(errorNotification("Failed to remove item", "You don't have permission to remove items from this playlist"));
+              return;
+            }
+            toaster.push(errorNotification("Error", "Failed to remove item from playlist"));
             return;
           }
-          toaster.push(errorNotification("Error", "Failed to remove item from playlist"));
-        } finally {
-          setLoading(false);
-        }
+          toaster.push(successNotification("Success", "Item removed from playlist"));
+          context.refresh();
+        });
       }
     });
     menuCategories.push(playlistCategory);
