@@ -6,7 +6,7 @@ import Icon from "./Icon";
 import ItemContextMenu from "./ItemContextMenu";
 import { playItem } from "../Util/Helpers";
 
-export function ItemListEntry({ item, index, type, allItems, setSortable }) {
+export function ItemListEntry({ item, index, type, allItems, setSortable, parentId, refresh }) {
   const { queue, setQueue, setPlaybackState } = useContext(GlobalState);
   const moreButtonRef = useRef();
 
@@ -72,6 +72,7 @@ export function ItemListEntry({ item, index, type, allItems, setSortable }) {
           )}
           <ItemContextMenu
             item={item}
+            context={{ parentType: type, index, parentId, refresh }}
             type={type}
             menuButton={
               <Button

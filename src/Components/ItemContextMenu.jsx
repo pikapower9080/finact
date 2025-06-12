@@ -6,7 +6,7 @@ import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { useContext, useState } from "react";
 import copy from "copy-to-clipboard";
 import { playItem } from "../Util/Helpers";
-import { errorNotification, infoNotification } from "../Util/Toaster";
+import { errorNotification, infoNotification, successNotification } from "../Util/Toaster";
 
 const storage = getStorage();
 
@@ -29,7 +29,7 @@ function getMenuContents(menuCategories) {
   ));
 }
 
-export default function ItemContextMenu({ item, menuButton, type, controlled, state, anchorPoint, onClose }) {
+export default function ItemContextMenu({ item, context, menuButton, type, controlled, state, anchorPoint, onClose }) {
   const { setLoading, setAddItem, setAddItemType, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
   const user = getUser();
 
@@ -199,12 +199,42 @@ export default function ItemContextMenu({ item, menuButton, type, controlled, st
     menuCategories.push([{ icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) }]);
   }
 
+  if (item.Type === "Audio" && context?.parentType == "playlist" && context?.parentId) {
+    const playlistCategory = [];
+    playlistCategory.push({
+      icon: "playlist_remove",
+      label: "Remove from Playlist",
+      action: () => {
+        setLoading(true);
+        jellyfinRequest(
+          `/Playlists/${context.parentId}/Items?EntryIds=${item.Id}`,
+          {
+            method: "DELETE"
+          },
+          "none"
+        ).then((response) => {
+          if (!response.ok) {
+            if (response.status === 403) {
+              toaster.push(errorNotification("Failed to remove item", "You don't have permission to remove items from this playlist"));
+              return;
+            }
+            toaster.push(errorNotification("Error", "Failed to remove item from playlist"));
+            return;
+          }
+          toaster.push(successNotification("Success", "Item removed from playlist"));
+          context.refresh();
+        });
+      }
+    });
+    menuCategories.push(playlistCategory);
+  }
+
   return controlled ? (
     <ControlledMenu menuButton={menuButton} state={state} anchorPoint={anchorPoint} onClose={onClose} align="start" transition theming="dark" onClick={(e) => e.stopPropagation()}>
       {getMenuContents(menuCategories)}
     </ControlledMenu>
   ) : (
-    <Menu menuButton={menuButton} align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
+    <Menu menuButton={menuButton} portal align="end" transition theming="dark" onClick={(e) => e.stopPropagation()}>
       {getMenuContents(menuCategories)}
     </Menu>
   );

@@ -18,14 +18,14 @@ export default function Playlist() {
   const [data, setData] = useState(null);
   const { loading, setLoading } = useContext(GlobalState);
 
+  const fetchPlaylistData = async () => {
+    const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete`)]);
+    setData({ data: responses[0], items: responses[1] });
+    setLoading(false);
+  };
+
   useEffect(() => {
     setLoading(true);
-    const fetchPlaylistData = async () => {
-      const responses = await Promise.all([jellyfinRequest(`/Items/${id}?UserId=${getUser().Id}`), jellyfinRequest(`/Users/${getUser().Id}/Items?ParentId=${id}&Fields=ItemCounts,PrimaryImageAspectRatio,CanDelete`)]);
-      setData({ data: responses[0], items: responses[1] });
-      setLoading(false);
-    };
-
     fetchPlaylistData();
   }, [id]);
 
@@ -71,7 +71,7 @@ export default function Playlist() {
           <Spacer height={10} />
           <List bordered hover /*sortable onSort={handleSortEnd}*/>
             {data.items.Items.map((item, index) => (
-              <ItemListEntry item={item} index={index} allItems={data.items.Items} key={item.Id} />
+              <ItemListEntry item={item} index={index} allItems={data.items.Items} type="playlist" parentId={id} key={item.Id} refresh={fetchPlaylistData} />
             ))}
           </List>
         </>
