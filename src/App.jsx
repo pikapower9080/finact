@@ -18,7 +18,6 @@ import AddItem from "./Components/AddItem";
 import Queue from "./Routes/Queue";
 import localforage from "localforage";
 import { isElectron, playItem } from "./Util/Helpers";
-import { jellyfinRequest } from "./Util/Network";
 
 const storage = getStorage();
 

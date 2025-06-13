@@ -22,7 +22,7 @@ export async function jellyfinRequest(url, options = {}, format = "json") {
   }
   options.headers = {
     ...options.headers,
-    Authorization: `MediaBrowser Client="Finact", Device="${isElectron ? electron.platform || "Desktop" : "Web"}", DeviceId="${getDeviceId()}", Version="1.0.0"${accessToken ? `, Token="${accessToken}"` : ""}`
+    Authorization: `MediaBrowser Client="Finact", Device="${isElectron ? electron.platform || "Desktop" : "Web"}", DeviceId="${getDeviceId()}", Version="${__VERSION__}"${accessToken ? `, Token="${accessToken}"` : ""}`
   };
   if (format === "json") {
     return fetchJSON(`${serverURL}${url}`, options);
