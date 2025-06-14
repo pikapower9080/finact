@@ -5,7 +5,7 @@ import { getUser, GlobalState } from "../App";
 import { getLibrary, jellyfinRequest } from "../Util/Network";
 import { useContext, useState } from "react";
 import copy from "copy-to-clipboard";
-import { playItem } from "../Util/Helpers";
+import { downloadBlob, playItem } from "../Util/Helpers";
 import { errorNotification, infoNotification, successNotification } from "../Util/Toaster";
 
 const storage = getStorage();
@@ -193,10 +193,46 @@ export default function ItemContextMenu({ item, context, menuButton, type, contr
   }
 
   if (item.Type === "MusicAlbum") {
-    menuCategories.push([{ icon: "content_copy", label: "Copy Album ID", action: () => copy(item.Id) }]);
+    menuCategories.push([
+      { icon: "content_copy", label: "Copy Album ID", action: () => copy(item.Id) },
+      {
+        icon: "download",
+        label: "Save Album Art",
+        action: () => {
+          setLoading(true);
+          jellyfinRequest(`/Items/${item.Id}/Images/Primary?quality=100`, {}, "blob")
+            .then((blob) => downloadBlob(blob, item.Name))
+            .catch((err) => {
+              console.error(err);
+              toaster.push(errorNotification("Error", "Failed to save album art"));
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+      }
+    ]);
   }
   if (item.Type === "Playlist") {
-    menuCategories.push([{ icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) }]);
+    menuCategories.push([
+      { icon: "content_copy", label: "Copy Playlist ID", action: () => copy(item.Id) },
+      {
+        icon: "download",
+        label: "Save Playlist Cover",
+        action: () => {
+          setLoading(true);
+          jellyfinRequest(`/Items/${item.Id}/Images/Primary?quality=100`, {}, "blob")
+            .then((blob) => downloadBlob(blob, item.Name))
+            .catch((err) => {
+              console.error(err);
+              toaster.push(errorNotification("Error", "Failed to save playlist cover"));
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+      }
+    ]);
   }
 
   if (item.Type === "Audio" && context?.parentType == "playlist" && context?.parentId) {
