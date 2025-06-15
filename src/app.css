@@ -183,3 +183,21 @@ div.rs-drawer-header img {
 .queue {
   height: 100%;
 }
+
+@media (max-width: 626px) {
+  .stop-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 530px) {
+  .track-time {
+    display: none;
+  }
+}
+
+@media (max-width: 370px) {
+  .track-time {
+    display: unset;
+  }
+}
