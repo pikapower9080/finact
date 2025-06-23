@@ -19,7 +19,7 @@
         "react-dom": "^19.0.0",
         "react-router": "^7.6.2",
         "react-scrubber": "^2.1.0",
-        "rsuite": "^5.80.1",
+        "rsuite": "^5.83.0",
       },
       "devDependencies": {
         "@eslint/js": "^9.29.0",
@@ -1062,7 +1062,7 @@
 
     "router": ["router@2.2.0", "", { "dependencies": { "debug": "^4.4.0", "depd": "^2.0.0", "is-promise": "^4.0.0", "parseurl": "^1.3.3", "path-to-regexp": "^8.0.0" } }, "sha512-nLTrUKm2UyiL7rlhapu/Zl45FwNgkZGaCpZbIHajDYgwlJCOzLSk+cIPAnsEqV955GjILJnKbdQC1nVPz+gAYQ=="],
 
-    "rsuite": ["rsuite@5.80.1", "", { "dependencies": { "@babel/runtime": "^7.20.1", "@juggle/resize-observer": "^3.4.0", "@rsuite/icons": "^1.3.2", "@types/lodash": "^4.17.15", "@types/prop-types": "^15.7.5", "@types/react-window": "^1.8.5", "classnames": "^2.3.1", "date-fns": "^2.29.3", "dom-lib": "^3.3.1", "lodash": "^4.17.21", "prop-types": "^15.8.1", "react-use-set": "^1.0.0", "react-window": "^1.8.8", "rsuite-table": "^5.19.1", "schema-typed": "^2.4.2" }, "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-nCnqWJN73SSx50wamGsNW9TSqxbfol/cjfL49wZ2n9NUytcI8grj2vvUBqVZKof7ki03FXmS9XO/xo6g4BA6fQ=="],
+    "rsuite": ["rsuite@5.83.0", "", { "dependencies": { "@babel/runtime": "^7.20.1", "@juggle/resize-observer": "^3.4.0", "@rsuite/icons": "^1.3.2", "@types/lodash": "^4.17.15", "@types/prop-types": "^15.7.5", "@types/react-window": "^1.8.5", "classnames": "^2.3.1", "date-fns": "^2.29.3", "dom-lib": "^3.3.1", "lodash": "^4.17.21", "prop-types": "^15.8.1", "react-use-set": "^1.0.0", "react-window": "^1.8.8", "rsuite-table": "^5.19.1", "schema-typed": "^2.4.2" }, "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-DNvWr+vbzctTsrZzrYOyJtLCRO1n6lSGu9UDF7YJY3Lmh1FcYqJGK4nSckwTfyZn7glDFuj8yOB/ha03VwaylA=="],
 
     "rsuite-table": ["rsuite-table@5.19.1", "", { "dependencies": { "@babel/runtime": "^7.12.5", "@juggle/resize-observer": "^3.3.1", "@rsuite/icons": "^1.0.0", "classnames": "^2.3.1", "dom-lib": "^3.3.1", "lodash": "^4.17.21", "react-is": "^17.0.2" }, "peerDependencies": { "prop-types": "^15.7.2", "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-PsG+z3GfwywDvPVEjZYVZcel0M6zOBAx2HKTgYLfct/yAzXJWPgW/eVuv9+8KmkcKzAh03UVYQdB88Gp7+RlGg=="],
 
