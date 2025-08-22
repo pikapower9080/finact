@@ -27,7 +27,7 @@ export default function Lyrics(props: { state: PlaybackState; position: number }
           path: { itemId: state.item.Id! }
         });
         newLyrics = lyricsResponse.data;
-        cacheStorage.set(`lyrics-${state.item.Id}`, lyrics);
+        cacheStorage.set(`lyrics-${state.item.Id}`, newLyrics);
         setLoading(false);
       } else {
         newLyrics = cacheStorage.get(`lyrics-${state.item.Id}`);
