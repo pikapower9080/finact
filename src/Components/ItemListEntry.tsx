@@ -25,7 +25,6 @@ export function ItemListEntry({
   refresh?: () => void;
 }) {
   const { setQueue, setPlaybackState } = useContext(GlobalState);
-  // const moreButtonRef = useRef();
 
   return (
     <List.Item
