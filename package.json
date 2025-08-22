@@ -28,7 +28,7 @@
     "express-ws": "^5.0.2",
     "localforage": "^1.10.0",
     "material-icons": "^1.13.14",
-    "react": "^19.0.0",
+    "react": "^19.1.1",
     "react-blurhash": "^0.3.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.6.2",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@hey-api/openapi-ts": "0.80.15",
-    "@types/react": "^19.0.10",
+    "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
     "electron": "^36.4.0",
