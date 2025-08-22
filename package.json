@@ -33,7 +33,7 @@
     "react-dom": "^19.1.1",
     "react-router": "^7.6.2",
     "react-scrubber": "^2.1.0",
-    "rsuite": "^5.80.1"
+    "rsuite": "^5.83.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
