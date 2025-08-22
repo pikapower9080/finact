@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import App from "./App.js";
+import App from "./App";
 import "./app.css";
 import "@szhsin/react-menu/dist/core.css";
 import "@szhsin/react-menu/dist/index.css";
