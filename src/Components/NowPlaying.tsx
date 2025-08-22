@@ -32,7 +32,6 @@ export default function NowPlaying(props: { state: PlaybackState }) {
   const isPlayingRef = useRef(false);
 
   let visualizerSupported = useRef(false);
-  // const fetchedLyrics = useRef(null);
 
   if (visualizerSupported.current == false && isButterchurnSupported()) {
     visualizerSupported.current = true;
