@@ -3,6 +3,19 @@
   --body-font: "Roboto", "Inter", Helvetica, sans-serif;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 0.6s ease-in-out both;
+}
+
 :root:has(body.rs-theme-dark) {
   color-scheme: dark;
 }
@@ -182,6 +195,16 @@ div.rs-drawer-header img {
 
 .queue {
   height: 100%;
+}
+
+.rs-navbar-brand {
+  cursor: default;
+  & .rs-image {
+    cursor: pointer;
+  }
+  &:hover {
+    color: unset !important;
+  }
 }
 
 @media (max-width: 626px) {

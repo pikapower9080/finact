@@ -1,4 +1,4 @@
-import { Header, Navbar, Nav, Avatar, Image, Drawer, Sidenav } from "rsuite";
+import { Header, Navbar, Nav, Avatar, Image, Drawer, Sidenav, HStack } from "rsuite";
 import { getStorage, getCacheStorage } from "../storage";
 import { Menu, MenuItem } from "@szhsin/react-menu";
 import Icon from "./Icon";
@@ -15,6 +15,7 @@ const cacheStorage = getCacheStorage();
 export default function MainHeader(props) {
   const [collapsedHeader] = useMediaQuery("(max-width: 571px)");
   const [sideNavOpen, setSideNavOpen] = useState(false);
+  const [logoEasterEgg, setLogoEasterEgg] = useState(false);
 
   function closeSideNav() {
     if (sideNavOpen) {
@@ -70,8 +71,16 @@ export default function MainHeader(props) {
         {!collapsedHeader ? (
           <>
             <Navbar.Brand>
-              <Image src="finact.png" style={{ height: "1.5em", marginRight: "5px" }} />
-              Finact
+              <HStack>
+                <Image src="finact.png" style={{ height: "1.5em" }} className={logoEasterEgg ? "spin" : ""} onClick={(e) => {
+                  if (logoEasterEgg) return;
+                  setLogoEasterEgg(true);
+                  setTimeout(() => {
+                    setLogoEasterEgg(false);
+                  }, 600);
+                }} />
+                <span>Finact</span>
+              </HStack>
             </Navbar.Brand>
             <Nav>{props.user ? <LibraryNavigation /> : ""}</Nav>
           </>
