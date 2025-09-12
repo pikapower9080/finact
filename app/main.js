@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import Store from "electron-store";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -22,6 +22,7 @@ let playbackState = {
   queue: []
 };
 let connectedSockets = [];
+let playbackPortUsed = false;
 
 function createWindow() {
   let options = {
@@ -60,6 +61,14 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  if (playbackPortUsed) {
+    dialog.showMessageBox(win, {
+      message: `Port 8514 is already in use. The playback control server will not be available.`,
+      type: "warning",
+      buttons: ["OK"]
+    });
+  }
 });
 
 app.on("window-all-closed", () => {
@@ -275,11 +284,18 @@ function broadcastMessage(message) {
     }
   });
 }
-
 server.listen(8514, "0.0.0.0", (error) => {
   if (error) {
+    console.error("Error starting playback server:");
     console.error(error);
   } else {
     console.log("Playback server listening on port 8514");
+  }
+});
+
+process.on("uncaughtException", (error) => {
+  console.error(error);
+  if (error.message.includes("EADDRINUSE")) {
+    playbackPortUsed = true;
   }
 });
