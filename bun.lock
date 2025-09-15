@@ -5,7 +5,7 @@
       "name": "finact",
       "dependencies": {
         "@pikapower9080/easy-storage": "^1.1.1",
-        "@szhsin/react-menu": "^4.4.1",
+        "@szhsin/react-menu": "^4.5.0",
         "butterchurn": "^2.6.7",
         "butterchurn-presets": "^2.4.7",
         "copy-to-clipboard": "^3.3.3",
@@ -262,7 +262,7 @@
 
     "@sindresorhus/is": ["@sindresorhus/is@4.6.0", "", {}, "sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw=="],
 
-    "@szhsin/react-menu": ["@szhsin/react-menu@4.4.1", "", { "dependencies": { "react-transition-state": "^2.3.1" }, "peerDependencies": { "react": ">=16.14.0", "react-dom": ">=16.14.0" } }, "sha512-a5uBCrYPpxiEwp839+cfEiaZh2LKqn9v7VUyBRjHWNjKbhVbSaI1Kyh5G3rIeHBxpbrhSYBmD5KJ5jgzhC2ECw=="],
+    "@szhsin/react-menu": ["@szhsin/react-menu@4.5.0", "", { "dependencies": { "react-transition-state": "^2.3.1" }, "peerDependencies": { "react": ">=16.14.0", "react-dom": ">=16.14.0" } }, "sha512-fblZBPxFGjg+QxSbdDsWk3H8brupuQG+ayYXElwg+FdCxwLQLvrHG9K6O9+4pE8qLyDy5REn/2HmffPXcBZviA=="],
 
     "@szmarczak/http-timer": ["@szmarczak/http-timer@4.0.6", "", { "dependencies": { "defer-to-connect": "^2.0.0" } }, "sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w=="],
 
