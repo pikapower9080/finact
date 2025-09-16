@@ -72,7 +72,7 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin" && !process.env.NODE_ENV == "dev") {
+  if (process.platform !== "darwin" && process.env.NODE_ENV !== "dev") {
     app.quit();
   }
 });
