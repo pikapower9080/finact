@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@pikapower9080/easy-storage": "^1.1.1",
-    "@szhsin/react-menu": "^4.4.1",
+    "@szhsin/react-menu": "^4.5.0",
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
     "copy-to-clipboard": "^3.3.3",
