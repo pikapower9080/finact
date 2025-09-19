@@ -36,7 +36,7 @@
     "rsuite": "^5.83.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
+    "@eslint/js": "^9.35.0",
     "@hey-api/openapi-ts": "0.80.15",
     "@types/express": "^5.0.3",
     "@types/react": "^19.1.10",
