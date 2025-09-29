@@ -23,7 +23,7 @@
       },
       "devDependencies": {
         "@eslint/js": "^9.29.0",
-        "@hey-api/openapi-ts": "0.80.15",
+        "@hey-api/openapi-ts": "0.84.3",
         "@types/express": "^5.0.3",
         "@types/react": "^19.1.10",
         "@types/react-dom": "^19.1.6",
@@ -172,9 +172,11 @@
 
     "@gar/promisify": ["@gar/promisify@1.1.3", "", {}, "sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw=="],
 
-    "@hey-api/json-schema-ref-parser": ["@hey-api/json-schema-ref-parser@1.0.6", "", { "dependencies": { "@jsdevtools/ono": "^7.1.3", "@types/json-schema": "^7.0.15", "js-yaml": "^4.1.0", "lodash": "^4.17.21" } }, "sha512-yktiFZoWPtEW8QKS65eqKwA5MTKp88CyiL8q72WynrBs/73SAaxlSWlA2zW/DZlywZ5hX1OYzrCC0wFdvO9c2w=="],
+    "@hey-api/codegen-core": ["@hey-api/codegen-core@0.2.0", "", { "peerDependencies": { "typescript": ">=5.5.3" } }, "sha512-c7VjBy/8ed0EVLNgaeS9Xxams1Tuv/WK/b4xXH3Qr4wjzYeJUtxOcoP8YdwNLavqKP8pGiuctjX2Z1Pwc4jMgQ=="],
 
-    "@hey-api/openapi-ts": ["@hey-api/openapi-ts@0.80.15", "", { "dependencies": { "@hey-api/json-schema-ref-parser": "1.0.6", "ansi-colors": "4.1.3", "c12": "2.0.1", "color-support": "1.1.3", "commander": "13.0.0", "handlebars": "4.7.8", "js-yaml": "4.1.0", "open": "10.1.2", "semver": "7.7.2" }, "peerDependencies": { "typescript": "^5.5.3" }, "bin": { "openapi-ts": "bin/index.cjs" } }, "sha512-THERBZUJG9lKHBqY7yBWL8icuwLJc/BY0kjuuZKZST/ZZzt+Zl78nMjP1RFaKybyT8yX0YlA/liem51dSSf+9Q=="],
+    "@hey-api/json-schema-ref-parser": ["@hey-api/json-schema-ref-parser@1.1.0", "", { "dependencies": { "@jsdevtools/ono": "^7.1.3", "@types/json-schema": "^7.0.15", "js-yaml": "^4.1.0", "lodash": "^4.17.21" } }, "sha512-+5eg9pgAAM9oSqJQuUtfTKbLz8yieFKN91myyXiLnprqFj8ROfxUKJLr9DKq/hGKyybKT1WxFSetDqCFm80pCA=="],
+
+    "@hey-api/openapi-ts": ["@hey-api/openapi-ts@0.84.3", "", { "dependencies": { "@hey-api/codegen-core": "^0.2.0", "@hey-api/json-schema-ref-parser": "1.1.0", "ansi-colors": "4.1.3", "c12": "2.0.1", "color-support": "1.1.3", "commander": "13.0.0", "handlebars": "4.7.8", "open": "10.1.2", "semver": "7.7.2" }, "peerDependencies": { "typescript": ">=5.5.3" }, "bin": { "openapi-ts": "bin/index.cjs" } }, "sha512-WFjGGBzmIzGRdHw+CC7g8TSzl4UjdWbNwiDO07a3BUEhSBZbLGidfh+E4SOGbePak6sWptVh9WqO3QrThFH25A=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
