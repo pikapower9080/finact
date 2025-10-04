@@ -38,6 +38,7 @@ export default function ItemContextMenu({
   controlled,
   state,
   anchorPoint,
+  setParentIsFavorite,
   onClose
 }: {
   item: BaseItemDto;
@@ -52,6 +53,7 @@ export default function ItemContextMenu({
   controlled?: boolean;
   state?: "open" | "closed";
   anchorPoint?: { x: number; y: number };
+  setParentIsFavorite?: (isFav: boolean) => void;
   onClose?: () => void;
 }) {
   const { setLoading, setAddItem, setAddItemType, setPlaybackState, queue, setQueue, toaster } = useContext(GlobalState);
@@ -154,6 +156,7 @@ export default function ItemContextMenu({
             });
 
             setIsFavorite(!isFavorite);
+            setParentIsFavorite?.(!isFavorite);
           } catch (err) {
             console.error(err);
             toaster.push(errorNotification("Error", `Failed to ${isFavorite ? "add to" : "remove from"} favorites`));

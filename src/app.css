@@ -97,6 +97,10 @@ i.material-icons.no-space {
   color: #ef5350 !important;
 }
 
+.center-vert {
+  margin-block: auto;
+}
+
 .rs-sidenav-item {
   padding-left: 20px !important;
 }

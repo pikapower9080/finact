@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useState } from "react";
 import { List, HStack, VStack, Text, Button, Avatar } from "rsuite";
 import { GlobalState } from "../App";
 import { formatTimestamp, getAlbumArt } from "../Util/Formatting";
@@ -25,6 +25,7 @@ export function ItemListEntry({
   refresh?: () => void;
 }) {
   const { setQueue, setPlaybackState } = useContext(GlobalState);
+  const [isFavorite, setIsFavorite] = useState(item.UserData?.IsFavorite || false);
 
   return (
     <List.Item
@@ -65,6 +66,9 @@ export function ItemListEntry({
               )}
         </VStack>
         <HStack.Item alignSelf="flex-end" grow={1} style={{ display: "flex", justifyContent: "flex-end" }}>
+          {isFavorite && (
+            <Icon icon="favorite" className="red-400 center-vert" style={{ marginRight: "10px", fontSize: "1.4em" }} noSpace />
+          )}
           <VStack alignItems="center" style={{ marginRight: 5 }}>
             <Text style={{ marginBlock: "auto" }} muted>
               {formatTimestamp(item.RunTimeTicks! / 10000000)}
@@ -90,6 +94,7 @@ export function ItemListEntry({
             item={item}
             context={{ parentType: type, index, parentId, refresh }}
             type={type}
+            setParentIsFavorite={setIsFavorite}
             menuButton={
               <Button
                 appearance="subtle"
