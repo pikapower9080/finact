@@ -25,7 +25,7 @@ export default function NowPlaying(props: { state: PlaybackState }) {
   const [visualizerOpen, setVisualizerOpen] = useState(false);
   const [lyricsOpen, setLyricsOpen] = useState(false);
   const [position, setPosition] = useState(0);
-  const [volume, setVolume] = useState(100);
+  const [volume, setVolume] = useState(75);
   const [repeat, setRepeat] = useState("none");
   const isScrubbing = useRef(false);
   const restoredVolume = useRef(false);
