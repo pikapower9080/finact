@@ -14,28 +14,28 @@
         "express-ws": "^5.0.2",
         "localforage": "^1.10.0",
         "material-icons": "^1.13.14",
-        "react": "^19.1.1",
+        "react": "^19.2.0",
         "react-blurhash": "^0.3.0",
-        "react-dom": "^19.1.1",
-        "react-router": "^7.8.2",
+        "react-dom": "^19.2.0",
+        "react-router": "^7.9.4",
         "react-scrubber": "^2.1.0",
         "rsuite": "^5.83.3",
       },
       "devDependencies": {
-        "@eslint/js": "^9.29.0",
+        "@eslint/js": "^9.38.0",
         "@hey-api/openapi-ts": "0.80.15",
         "@types/express": "^5.0.3",
-        "@types/react": "^19.1.10",
-        "@types/react-dom": "^19.1.6",
-        "@vitejs/plugin-react": "^5.0.2",
-        "electron": "^38.0.0",
+        "@types/react": "^19.2.2",
+        "@types/react-dom": "^19.2.2",
+        "@vitejs/plugin-react": "^5.0.4",
+        "electron": "^38.3.0",
         "electron-builder": "^26.0.12",
-        "eslint": "^9.29.0",
+        "eslint": "^9.37.0",
         "eslint-plugin-react-hooks": "^5.2.0",
-        "eslint-plugin-react-refresh": "^0.4.19",
-        "globals": "^16.2.0",
+        "eslint-plugin-react-refresh": "^0.4.24",
+        "globals": "^16.4.0",
         "prettier": "^3.6.2",
-        "vite": "^6.3.5",
+        "vite": "^6.4.0",
       },
     },
   },
@@ -164,7 +164,7 @@
 
     "@eslint/eslintrc": ["@eslint/eslintrc@3.3.1", "", { "dependencies": { "ajv": "^6.12.4", "debug": "^4.3.2", "espree": "^10.0.1", "globals": "^14.0.0", "ignore": "^5.2.0", "import-fresh": "^3.2.1", "js-yaml": "^4.1.0", "minimatch": "^3.1.2", "strip-json-comments": "^3.1.1" } }, "sha512-gtF186CXhIl1p4pJNGZw8Yc6RlshoePRvE0X91oPGb3vZ8pM3qOS9W9NGPat9LziaBV7XrJWGylNQXkGcnM3IQ=="],
 
-    "@eslint/js": ["@eslint/js@9.37.0", "", {}, "sha512-jaS+NJ+hximswBG6pjNX0uEJZkrT0zwpVi3BA3vX22aFGjJjmgSTSmPpZCRKmoBL5VY/M6p0xsSJx7rk7sy5gg=="],
+    "@eslint/js": ["@eslint/js@9.38.0", "", {}, "sha512-UZ1VpFvXf9J06YG9xQBdnzU+kthors6KjhMAl6f4gH4usHyh31rUf2DLGInT8RFYIReYXNSydgPY0V2LuWgl7A=="],
 
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
@@ -1455,6 +1455,8 @@
     "config-file-ts/glob": ["glob@10.4.5", "", { "dependencies": { "foreground-child": "^3.1.0", "jackspeak": "^3.1.2", "minimatch": "^9.0.4", "minipass": "^7.1.2", "package-json-from-dist": "^1.0.0", "path-scurry": "^1.11.1" }, "bin": { "glob": "dist/esm/bin.mjs" } }, "sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg=="],
 
     "electron-winstaller/fs-extra": ["fs-extra@7.0.1", "", { "dependencies": { "graceful-fs": "^4.1.2", "jsonfile": "^4.0.0", "universalify": "^0.1.0" } }, "sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw=="],
+
+    "eslint/@eslint/js": ["@eslint/js@9.37.0", "", {}, "sha512-jaS+NJ+hximswBG6pjNX0uEJZkrT0zwpVi3BA3vX22aFGjJjmgSTSmPpZCRKmoBL5VY/M6p0xsSJx7rk7sy5gg=="],
 
     "filelist/minimatch": ["minimatch@5.1.6", "", { "dependencies": { "brace-expansion": "^2.0.1" } }, "sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g=="],
 
